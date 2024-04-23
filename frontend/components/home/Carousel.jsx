@@ -3,15 +3,11 @@ import React from "react";
 import { SliderBox } from "react-native-image-slider-box";
 import { COLORS } from "../../constants";
 
-const welcomeImage = require("../../assets/images/welcome.jpg");
+const welcomeImage = require("../../assets/images/friends.png");
 const welcomeImage1 = require("../../assets/images/welcome1.jpg");
 const welcomeImage2 = require("../../assets/images/welcome2.jpg");
 const Carousel = () => {
-  const slides = [
-    welcomeImage,
-    welcomeImage1,
-    welcomeImage2
-    ];
+  const slides = [welcomeImage, welcomeImage1, welcomeImage2];
   return (
     <View style={styles.carouselContainer}>
       <SliderBox

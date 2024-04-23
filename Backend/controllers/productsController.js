@@ -29,7 +29,7 @@ module.exports = {
   },
   searchProduct: async (req, res) => {
     try {
-      const result = await product.aggregate([
+      const result = await Product.aggregate([
         {
           $search: {
             index: "furniture",
@@ -45,6 +45,17 @@ module.exports = {
       res.status(200).json(result);
     } catch (error) {
       res.status(500).json("failed to get the productjjs");
+    }
+  },
+  deleteProduct: async (req, res) => {
+    try {
+      const deletedProduct = await Product.findByIdAndDelete(req.params.id);
+      if (!deletedProduct) {
+        return res.status(404).json("Product not found");
+      }
+      res.status(200).json("Product deleted successfully");
+    } catch (error) {
+      res.status(500).json("Failed to delete the product");
     }
   },
 };

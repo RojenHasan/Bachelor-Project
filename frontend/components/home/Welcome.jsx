@@ -11,12 +11,7 @@ const Welcome = () => {
   return (
     <View>
       <View style={styles.container}>
-        <Text style={styles.welcomeTxt(COLORS.black, 22)}>
-          Find the most
-        </Text>
-        <Text style={styles.welcomeTxt(COLORS.primary, 0)}>
-          Luxurios furniture
-        </Text>
+        <Text style={styles.welcomeTxt(COLORS.black, 22)}>Pivot</Text>
       </View>
 
       <View style={styles.searchContainer}>

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { View, Text, TouchableOpacity, Image } from "react-native";
 import styles from "./productDetail.style";
+import { useRoute } from "@react-navigation/native";
 import {
   Feather,
   Ionicons,
@@ -15,6 +16,8 @@ import {
   GestureHandlerRootView,
 } from "react-native-gesture-handler";
 const ProductDetails = ({ navigation }) => {
+  const route = useRoute();
+  const { item } = route.params;
   const [count, setCount] = useState(1);
 
   const incremant = () => {
@@ -40,9 +43,9 @@ const ProductDetails = ({ navigation }) => {
 
       <View style={styles.details}>
         <View style={styles.titleRow}>
-          <Text style={styles.title}>Product</Text>
+          <Text style={styles.title}>{item.title}</Text>
           <View style={styles.priceWrapper}>
-            <Text style={styles.price}>660$</Text>
+            <Text style={styles.price}>$ {item.price}</Text>
           </View>
         </View>
 
@@ -66,10 +69,7 @@ const ProductDetails = ({ navigation }) => {
         </View>
         <View style={styles.descriptionWrapper}>
           <Text style={styles.description}>Description</Text>
-          <Text style={styles.descText}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tempor
-            turpis eget magna consectetur
-          </Text>
+          <Text style={styles.descText}>{item.description}</Text>
         </View>
 
         <View style={{ marginBottom: SIZES.small }}>

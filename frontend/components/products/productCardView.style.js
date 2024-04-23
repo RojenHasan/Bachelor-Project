@@ -11,6 +11,7 @@ const styles = StyleSheet.create({
     marginVertical: 5,
     alignItems: "center",
     elevation: 2,
+    position: "relative", // Ensure position is set to relative
   },
   imageContainer: {
     marginRight: 10,
@@ -22,6 +23,7 @@ const styles = StyleSheet.create({
   },
   details: {
     flex: 1,
+    marginRight: 40,
   },
   title: {
     fontSize: 18,
@@ -38,8 +40,13 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   addBtn: {
+    position: "absolute",
+    top: 0,
+    bottom: 0,
+    right: 0,
     justifyContent: "center",
     alignItems: "center",
+    width: 50,
   },
   //   container: {
   //     width: 182,
