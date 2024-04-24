@@ -37,6 +37,12 @@ const styles= StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         backgroundColor: COLORS.primary
+    },
+    searchImage: {
+        resizeMode: "contain",
+        width: SIZES.width -100,
+        height: SIZES.height -300,
+        opacity: 0.9,
     }
 })
 
