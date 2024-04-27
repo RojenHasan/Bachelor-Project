@@ -67,7 +67,7 @@ const Home = () => {
           <View style={styles.appBar}>
             <Ionicons name="location-outline" size={24} />
             <Text style={styles.location}>
-              {userData ? userData.location : "Shanghai, China"}
+              {userData ? userData.location : "Leuven, Belguim"}
             </Text>
 
             <View style={{ alignItems: "flex-end" }}>
@@ -76,7 +76,7 @@ const Home = () => {
                   {cartCount ? cartCount : 0}
                 </Text>
               </View>
-              <TouchableOpacity onPress={()=> handlePress()}>
+              <TouchableOpacity onPress={() => handlePress()}>
                 <Fontisto name="shopping-bag" size={24}></Fontisto>
               </TouchableOpacity>
             </View>

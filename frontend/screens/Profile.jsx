@@ -60,7 +60,7 @@ const Profile = ({ navigation }) => {
       await AsyncStorage.multiRemove([userID, "token", "id"]);
       navigation.replace("Bottom Navigation");
     } catch (error) {
-      console.error("Error deleting keys:", error);
+      console.error("Error logging out keys:", error);
     }
   };
 
@@ -209,6 +209,7 @@ const Profile = ({ navigation }) => {
                     <Text style={styles.menuItemText}>Logout</Text>
                   </View>
                 </TouchableOpacity>
+                
               </View>
             )}
           </View>
@@ -224,6 +225,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLORS.lightWhite,
+    marginBottom:SIZES.xxLarge
   },
   loginBtn: {
     backgroundColor: COLORS.secondary,
