@@ -3,9 +3,14 @@ const dotenv = require("dotenv");
 const mongoose = require("mongoose");
 var cors = require("cors");
 const app = express();
-const productRouter = require("./routes/products");
+const productRoute = require("./routes/products");
+const authRoute = require("./routes/auth");
+const paymentRoute = require("./routes/payment");
+const orderRoute = require("./routes/orders");
+const userRoute = require("./routes/user");
+const cartRoute = require("./routes/cart");
+
 const port = 3000;
-app.use(cors());
 
 dotenv.config();
 mongoose
@@ -16,14 +21,21 @@ mongoose
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ limit: "10mb", extended: true }));
 
-app.use("/api/products", productRouter);
+app.use(cors());
+app.use("/api/", authRoute);
+app.use("/api/products", productRoute);
+app.use("/api/payments", paymentRoute);
+app.use("/api/orders", orderRoute);
+app.use("/api/users", userRoute);
+app.use("/api/carts", cartRoute);
+
 app.listen(process.env.PORT || port, () =>
   console.log(`Example app listening on port ${process.env.PORT}!`)
 );
 
-app.get("/products/:id", function (req, res, next) {
-  res.json({ msg: "This is CORS-enabled for all origins!" });
-});
+// app.get("/products/:id", function (req, res, next) {
+//   res.json({ msg: "This is CORS-enabled for all origins!" });
+// });
 
 // app.listen(port, function () {
 //   console.log(`CORS-enabled web server listening on port ${port}`);
