@@ -12,6 +12,7 @@ import {
   LoginPage,
   Favorites,
   Orders,
+  Signup,
 } from "./screens";
 
 const Stack = createNativeStackNavigator();
@@ -71,6 +72,11 @@ export default function App() {
         <Stack.Screen
           name="Orders"
           component={Orders}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Signup"
+          component={Signup}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

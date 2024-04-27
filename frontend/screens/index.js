@@ -7,6 +7,7 @@ import NewRivals from "./NewRivals";
 import LoginPage from "./LoginPage";
 import Orders from "./Orders";
 import Favorites from "./Favorites";
+import Signup from "./Signup";
 import ProductList from "../components/products/ProductList";
 export {
   Home,
@@ -19,4 +20,5 @@ export {
   LoginPage,
   Orders,
   Favorites,
+  Signup
 };
