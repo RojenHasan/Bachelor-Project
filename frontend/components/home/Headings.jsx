@@ -12,7 +12,7 @@ const Headings =() => {
         <Text style= {styles.headerTitle}>New Products</Text>
         <TouchableOpacity onPress={ ()=> navigation.navigate("ProductList")}>
           <Ionicons 
-          name= 'apps-outline' 
+          name= 'grid-outline' 
           size={24} 
           color= {COLORS.primary}/>
         </TouchableOpacity>
