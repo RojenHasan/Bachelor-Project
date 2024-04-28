@@ -25,7 +25,6 @@ const LoginPage = ({ navigation }) => {
     setErrors((prevState) => ({ ...prevState, [input]: errorMessage }));
   };
 
-  // INPUT VALIDATION
   const validate = () => {
     Keyboard.dismiss();
     let valid = true;
@@ -51,37 +50,77 @@ const LoginPage = ({ navigation }) => {
     }
   };
 
+  // const login = async () => {
+  //   setLoader(true);
+  //   try {
+  //     const endpoint = "http://192.168.1.34:3000/api/login";
+  //     const data = inputs;
+  //     console.log(data);
+
+  //     const response = await axios.post(endpoint, data);
+  //     setResponseData(response.data);
+  //     console.log(responseData);
+
+  //     // try {
+  //     //   setLoader(false);
+  //     //   await AsyncStorage.setItem(
+  //     //     `user${responseData._id}`,
+  //     //     JSON.stringify(responseData)
+  //     //   );
+  //     //   await AsyncStorage.setItem("id", JSON.stringify(responseData._id));
+  //     //   navigation.replace("Bottom Navigation");
+  //     // }
+  //   } catch (error) {
+  //     Alert.alert("Error", "Oops, something went wrong. Try again");
+  //   } finally {
+  //     setLoader(false);
+  //   }
+  // };
   const login = async () => {
     setLoader(true);
     try {
       const endpoint = "http://192.168.1.34:3000/api/login";
       const data = inputs;
-      console.log(data);
-
       const response = await axios.post(endpoint, data);
-      setResponseData(response.data);
-      console.log(responseData);
 
-      try {
-        setLoader(false);
+      if (response.data) {
+        setResponseData(response.data);
         await AsyncStorage.setItem(
-          `user${responseData._id}`,
-          JSON.stringify(responseData)
+          `user${response.data._id}`,
+          JSON.stringify(response.data)
         );
-        await AsyncStorage.setItem("id", JSON.stringify(responseData._id));
+        await AsyncStorage.setItem("id", JSON.stringify(response.data._id));
         navigation.replace("Bottom Navigation");
-      } catch (error) {
-        Alert.alert("Error", "Oops, something went wrong. Try again");
       }
     } catch (error) {
-      Alert.alert("Error", error);
+      if (error.response) {
+        Alert.alert("Login Error", error.response.data);
+      } else {
+        Alert.alert("Error", "Oops, something went wrong. Try again");
+      }
+    } finally {
+      setLoader(false);
     }
   };
 
   const handleChanges = (text, input) => {
     setInput((prevState) => ({ ...prevState, [input]: text }));
   };
-
+  useEffect(() => {
+    if (responseData) {
+      console.log(responseData);
+      try {
+        AsyncStorage.setItem(
+          `user${responseData._id}`,
+          JSON.stringify(responseData)
+        );
+        AsyncStorage.setItem("id", JSON.stringify(responseData._id));
+        navigation.replace("Bottom Navigation");
+      } catch (error) {
+        Alert.alert("Error", "Oops, something went wrong. Try again");
+      }
+    }
+  }, [responseData]);
   return (
     <ScrollView>
       <SafeAreaView style={{ marginHorizontal: 20 }}>
