@@ -6,6 +6,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { COLORS } from "../constants/index";
 import Search from "../screens/Search";
 import Profile from "../screens/Profile";
+import AddItem from '../screens/AddItem'
 
 const Tab = createBottomTabNavigator();
 
@@ -49,6 +50,21 @@ const BottomTabNavigation = () => {
             return (
               <Ionicons
                 name={"search-sharp"}
+                size={24}
+                color={focused ? COLORS.primary : COLORS.gray2}
+              />
+            );
+          },
+        }}
+      />
+      <Tab.Screen
+        name="AddItem"
+        component={AddItem}
+        options={{
+          tabBarIcon: ({ focused }) => {
+            return (
+              <Ionicons
+                name={focused ? "add-circle" : "add-circle-outline"}
                 size={24}
                 color={focused ? COLORS.primary : COLORS.gray2}
               />
