@@ -15,46 +15,53 @@ import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { COLORS, SIZES } from "../constants";
 import axios from "axios";
+import { Avatar } from "react-native-paper";
+
 import Input from "../components/auth/input";
 import SharedButton from "../components/auth/Button";
 import BackButton from "../components/auth/BackButton";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import { launchCamera, launchImageLibrary } from "react-native-image-picker";
-import * as ImagePicker from "react-native-image-picker";
+import { launchImageLibrary } from "react-native-image-picker";
+import { useRoute } from "@react-navigation/native";
 
 const AddItem = ({ navigation }) => {
-  const [selectImage, setSelectImage] = useState("");
-  const OnGalleryPress = () => {
-    const options = {
-      mediaType: "photo",
-    };
-    try {
-      launchImageLibrary(options, (response) => {
-        if (response.didCancel) {
-          console.log("User cancelled image picker");
-        } else if (response.error) {
-          console.error("ImagePicker Error: ", response.error);
-        } else if (response.customButton) {
-          console.log("User tapped custom button: ", response.customButton);
-        } else {
-          const source = { uri: response.assets[0].uri };
-          console.log("response", JSON.stringify(response));
-          setSelectImage(source.uri);
-        }
-      });
-    } catch (error) {
-      console.error("Failed to launch image library:", error);
-    }
-  };
-
-  const [inputs, setInput] = useState({
-    title: "",
-    price: "",
-    imageUrl: "",
-    description: "",
-  });
+  const [image, setImage] = useState("");
+  const [title, setTitle] = useState("");
+  const [price, setPrice] = useState("");
+  const [description, setDescription] = useState("");
+  const [selectedImage, setSelectedImage] = useState(null);
 
   const [errors, setErrors] = useState({});
+  const route = useRoute();
+
+  const selectPhoto = () => {
+    launchImageLibrary(
+      {
+        mediaType: "photo",
+        maxWidth: 400,
+        maxHeight: 400,
+        includeBase64: true,
+      },
+      (response) => {
+        console.log(launchImageLibrary); // Check if it's defined and not null
+
+        if (response.didCancel) {
+          // User canceled the image selection
+          console.log("Image selection canceled");
+        } else if (response.error) {
+          // An error occurred during image selection
+          console.error("Image selection error:", response.error);
+        } else {
+          // Image selected successfully
+          const data = `data:${response.mime};base64,${response.base64}`;
+          setSelectedImage(response.uri);
+        }
+      }
+    ).catch((error) => {
+      // Handle any unhandled promise rejections
+      console.error("Promise rejection:", error);
+    });
+  };
 
   const handleError = (errorMessage, input) => {
     setErrors((prevState) => ({ ...prevState, [input]: errorMessage }));
@@ -64,17 +71,17 @@ const AddItem = ({ navigation }) => {
     Keyboard.dismiss();
     let valid = true;
 
-    if (!inputs.title) {
+    if (!title) {
       handleError("Please input title", "title");
       valid = false;
     }
 
-    if (!inputs.price) {
+    if (!price) {
       handleError("Please input price", "price");
       valid = false;
     }
 
-    if (!inputs.description) {
+    if (!description) {
       handleError("Please input description", "description");
       valid = false;
     }
@@ -83,25 +90,52 @@ const AddItem = ({ navigation }) => {
       addProduct();
     }
   };
-
-  const addProduct = async () => {
-    try {
-      const endpoint = "http://192.168.1.34:3000/api/products";
-      const response = await axios.post(endpoint, inputs);
-      if (response.status === 200) {
-        Alert.alert("Success", "Product added successfully");
-        navigation.goBack();
-      }
-    } catch (error) {
-      Alert.alert("Error", "Failed to add the product");
-    }
-  };
-
   const handleChanges = (text, input) => {
-    setInput((prevState) => ({ ...prevState, [input]: text }));
+    switch (input) {
+      case "title":
+        setTitle(text);
+        break;
+      case "price":
+        setPrice(text);
+        break;
+      case "description":
+        setDescription(text);
+        break;
+      // Assuming there's an "image" input as well
+      case "image":
+        setImage(text);
+        break;
+      default:
+        break;
+    }
+
     if (errors[input]) {
       handleError(null, input);
     }
+  };
+
+  const addProduct = () => {
+    const formData = new FormData();
+    formData.append("title", title);
+    formData.append("price", price);
+    formData.append("description", description);
+    formData.append("image", {
+      name: "productImage.jpg",
+      type: "image/jpeg",
+      uri: selectedImage, // Assuming you're sending the URI
+    });
+
+    axios
+      .post("http://192.168.1.32:3000/api/products", formData)
+      .then((res) => {
+        console.log(res.data);
+        if (res.data.status == "Ok") {
+          Toast.show({
+            type: "success",
+            text1: "Added",
+          });
+        }
+      });
   };
 
   return (
@@ -115,7 +149,6 @@ const AddItem = ({ navigation }) => {
               style={styles.img}
             />
             <Text style={styles.motto}>Add a Product</Text>
-
             <Input
               placeholder="Product Title"
               icon="tag-outline"
@@ -123,7 +156,6 @@ const AddItem = ({ navigation }) => {
               error={errors.title}
               onChangeText={(text) => handleChanges(text, "title")}
             />
-
             <Input
               placeholder="Price"
               icon="currency-usd"
@@ -131,21 +163,16 @@ const AddItem = ({ navigation }) => {
               error={errors.price}
               onChangeText={(text) => handleChanges(text, "price")}
             />
-
-            <Image source={{ uri: selectImage }} style={styles.imagePreview} />
-
-            {/* <TouchableOpacity
-              onPress={OnGalleryPress}
-              activeOpacity={1}
-              style={{ padding: 10 }}
-            >
-              <MaterialCommunityIcons
-                name="camera-outline"
-                size={30}
-                color={COLORS.green}
-              />
-            </TouchableOpacity> */}
-            
+            <TouchableOpacity onPress={() => selectPhoto()}>
+              {selectedImage ? (
+                <Image
+                  source={{ uri: selectedImage }}
+                  style={styles.selectedImage}
+                />
+              ) : (
+                <Text>Select an Image</Text>
+              )}
+            </TouchableOpacity>
 
             <Input
               placeholder="Description"
@@ -154,7 +181,6 @@ const AddItem = ({ navigation }) => {
               error={errors.description}
               onChangeText={(text) => handleChanges(text, "description")}
             />
-
             <SharedButton
               style={styles.button}
               title={"Add Product"}

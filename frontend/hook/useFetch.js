@@ -11,7 +11,7 @@ const useFetch = () => {
     setIsLoading(true);
     try {
       const response = await axios.get(
-        "http://192.168.1.34:3000/api/products/"
+        "http://192.168.1.32:3000/api/products/"
       );
       setData(response.data);
       setIsLoading(false);

@@ -2,12 +2,25 @@ const Product = require("../models/products");
 
 module.exports = {
   createProduct: async (req, res) => {
-    const newProduct = new Product(req.body);
+    console.log(req.body);
+    console.log(req.file);
+    if (!req.file) return res.status(400).send("No image file uploaded.");
+
+    const { title, price, description } = req.body;
+    const image = req.file.path;
+
+    const newProduct = new Product({
+      title,
+      price,
+      description,
+      image,
+    });
+
     try {
       await newProduct.save();
       res.status(200).json("Product created successfully");
     } catch (error) {
-      res.status(500).json("failed to create the product");
+      res.status(500).json("Failed to create the product");
     }
   },
 
