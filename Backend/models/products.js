@@ -3,11 +3,14 @@ const mongoose = require("mongoose");
 const ProductSchema = new mongoose.Schema(
   {
     title: { type: String, required: true },
-    //supplier: { type: String, required: true },
     price: { type: String, required: true },
     image: { type: String },
     description: { type: String, required: true },
-    //product_location: { type: String, required: true },
+    category: {
+      type: String,
+      enum: ["furniture", "car", "house", "clothe"],
+      required: true,
+    },
   },
   { timestamps: true }
 );

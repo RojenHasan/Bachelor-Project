@@ -6,25 +6,26 @@ module.exports = {
     console.log(req.body);
     console.log(req.file);
 
-    const { title, price, description } = req.body;
+    const { title, price, description, category } = req.body;
     try {
-      let imageUrl = ""; // Default empty image URL
+      let image = "";
 
       if (req.file) {
         const result = await cloudinary.uploader.upload(req.file.path, {
-          folder: "products", // You can specify a folder in Cloudinary to organize your images
+          folder: "products",
           width: 500,
           height: 500,
           crop: "fill",
         });
-        imageUrl = result.url; // Store the Cloudinary URL of the image
+        image = result.url;
       }
 
       const newProduct = new Product({
         title,
         price,
+        image: image,
         description,
-        image: imageUrl, // Use the uploaded image URL if available, otherwise empty string
+        category,
       });
 
       await newProduct.save();
