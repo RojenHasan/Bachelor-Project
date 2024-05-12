@@ -1,140 +1,90 @@
+import React, { useState } from "react";
 import {
   StyleSheet,
-  Text,
   View,
-  Image,
-  Alert,
-  TextInput,
-  KeyboardAvoidingView,
-  Keyboard,
+  Text,
   ScrollView,
+  TextInput,
   TouchableOpacity,
+  KeyboardAvoidingView,
+  Image,
   Button,
+  Alert,
 } from "react-native";
-import React, { useEffect, useState } from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { COLORS, SIZES } from "../constants";
-import axios from "axios";
-import { Avatar } from "react-native-paper";
-
 import Input from "../components/auth/input";
-import SharedButton from "../components/auth/Button";
+import * as ImagePicker from "expo-image-picker";
+import { SafeAreaView } from "react-native-safe-area-context";
 import BackButton from "../components/auth/BackButton";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import { launchImageLibrary } from "react-native-image-picker";
-import { useRoute } from "@react-navigation/native";
+import { COLORS, SIZES } from "../constants";
+import SharedButton from "../components/auth/Button";
 
-const AddItem = ({ navigation }) => {
-  const [image, setImage] = useState("");
+const AddProduct = ({ navigation }) => {
+  const [selectedImage, setSelectedImage] = useState(null);
   const [title, setTitle] = useState("");
   const [price, setPrice] = useState("");
   const [description, setDescription] = useState("");
-  const [selectedImage, setSelectedImage] = useState(null);
 
-  const [errors, setErrors] = useState({});
-  const route = useRoute();
+  const openImageLibrary = async () => {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
-  const selectPhoto = () => {
-    launchImageLibrary(
-      {
-        mediaType: "photo",
-        maxWidth: 400,
-        maxHeight: 400,
-        includeBase64: true,
-      },
-      (response) => {
-        console.log(launchImageLibrary); // Check if it's defined and not null
+    if (status !== "granted") {
+      alert("Sorry, we need camera roll permissions to make this work!");
+    }
 
-        if (response.didCancel) {
-          // User canceled the image selection
-          console.log("Image selection canceled");
-        } else if (response.error) {
-          // An error occurred during image selection
-          console.error("Image selection error:", response.error);
-        } else {
-          // Image selected successfully
-          const data = `data:${response.mime};base64,${response.base64}`;
-          setSelectedImage(response.uri);
-        }
+    if (status === "granted") {
+      const response = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+      });
+
+      if (!response.cancelled) {
+        setSelectedImage(response.uri);
+        Alert.alert("Success", "Image selected successfully!");
+      } else {
+        Alert.alert("Canceled", "Image selection canceled.");
       }
-    ).catch((error) => {
-      // Handle any unhandled promise rejections
-      console.error("Promise rejection:", error);
-    });
-  };
-
-  const handleError = (errorMessage, input) => {
-    setErrors((prevState) => ({ ...prevState, [input]: errorMessage }));
-  };
-
-  const validate = () => {
-    Keyboard.dismiss();
-    let valid = true;
-
-    if (!title) {
-      handleError("Please input title", "title");
-      valid = false;
-    }
-
-    if (!price) {
-      handleError("Please input price", "price");
-      valid = false;
-    }
-
-    if (!description) {
-      handleError("Please input description", "description");
-      valid = false;
-    }
-
-    if (valid) {
-      addProduct();
-    }
-  };
-  const handleChanges = (text, input) => {
-    switch (input) {
-      case "title":
-        setTitle(text);
-        break;
-      case "price":
-        setPrice(text);
-        break;
-      case "description":
-        setDescription(text);
-        break;
-      // Assuming there's an "image" input as well
-      case "image":
-        setImage(text);
-        break;
-      default:
-        break;
-    }
-
-    if (errors[input]) {
-      handleError(null, input);
     }
   };
 
-  const addProduct = () => {
-    const formData = new FormData();
-    formData.append("title", title);
-    formData.append("price", price);
-    formData.append("description", description);
-    formData.append("image", {
-      name: "productImage.jpg",
-      type: "image/jpeg",
-      uri: selectedImage, // Assuming you're sending the URI
-    });
+  const handleAddProduct = (selectedImage) => {
+    if (!selectedImage) {
+      Alert.alert(
+        "No Image Selected",
+        "Please select an image for the product."
+      );
+      return;
+    }
+    // Prepare the data to send to the backend
+    const productData = {
+      title: title,
+      price: price,
+      description: description,
+      image: selectedImage,
+    };
 
-    axios
-      .post("http://192.168.1.32:3000/api/products", formData)
-      .then((res) => {
-        console.log(res.data);
-        if (res.data.status == "Ok") {
-          Toast.show({
-            type: "success",
-            text1: "Added",
-          });
+    // Send the data to the backend
+    fetch("http://192.168.1.32:3000/api/products", {
+      // Assuming "/api/products" is the endpoint for adding products
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(productData),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
         }
+        return response.json();
+      })
+      .then((data) => {
+        console.log("Product added successfully:", data);
+        // Handle success, e.g., navigate to a success page or refresh the product list
+        navigation.navigate("Home"); // Assuming "Home" is the screen where the product list is displayed
+      })
+      .catch((error) => {
+        console.error("Error adding product:", error);
+        // Handle error, e.g., display an error message to the user
       });
   };
 
@@ -149,42 +99,35 @@ const AddItem = ({ navigation }) => {
               style={styles.img}
             />
             <Text style={styles.motto}>Add a Product</Text>
+
             <Input
               placeholder="Product Title"
               icon="tag-outline"
               label={"Title"}
-              error={errors.title}
-              onChangeText={(text) => handleChanges(text, "title")}
+              onChangeText={(text) => setTitle(text)}
             />
             <Input
               placeholder="Price"
               icon="currency-usd"
               label={"Price"}
-              error={errors.price}
-              onChangeText={(text) => handleChanges(text, "price")}
+              onChangeText={(text) => setPrice(text)}
+              keyboardType="numeric"
             />
-            <TouchableOpacity onPress={() => selectPhoto()}>
-              {selectedImage ? (
-                <Image
-                  source={{ uri: selectedImage }}
-                  style={styles.selectedImage}
-                />
-              ) : (
-                <Text>Select an Image</Text>
-              )}
-            </TouchableOpacity>
 
             <Input
               placeholder="Description"
               icon="text-box-outline"
               label={"Description"}
-              error={errors.description}
-              onChangeText={(text) => handleChanges(text, "description")}
+              onChangeText={(text) => setDescription(text)}
+              multiline
             />
+            {selectedImage && <Image source={{ uri: selectedImage }} />}
+            <Button title="Choose Image" onPress={openImageLibrary} />
+
             <SharedButton
               style={styles.button}
               title={"Add Product"}
-              onPress={validate}
+              onPress={handleAddProduct}
             />
           </View>
         </KeyboardAvoidingView>
@@ -193,7 +136,7 @@ const AddItem = ({ navigation }) => {
   );
 };
 
-export default AddItem;
+export default AddProduct;
 
 const styles = StyleSheet.create({
   scroll: {

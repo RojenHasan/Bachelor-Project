@@ -1,25 +1,36 @@
 const Product = require("../models/products");
+const cloudinary = require("../helper/imageUpload");
 
 module.exports = {
   createProduct: async (req, res) => {
     console.log(req.body);
     console.log(req.file);
-    if (!req.file) return res.status(400).send("No image file uploaded.");
 
     const { title, price, description } = req.body;
-    const image = req.file.path;
-
-    const newProduct = new Product({
-      title,
-      price,
-      description,
-      image,
-    });
-
     try {
+      let imageUrl = ""; // Default empty image URL
+
+      if (req.file) {
+        const result = await cloudinary.uploader.upload(req.file.path, {
+          folder: "products", // You can specify a folder in Cloudinary to organize your images
+          width: 500,
+          height: 500,
+          crop: "fill",
+        });
+        imageUrl = result.url; // Store the Cloudinary URL of the image
+      }
+
+      const newProduct = new Product({
+        title,
+        price,
+        description,
+        image: imageUrl, // Use the uploaded image URL if available, otherwise empty string
+      });
+
       await newProduct.save();
       res.status(200).json("Product created successfully");
     } catch (error) {
+      console.error("Error while creating product:", error.message);
       res.status(500).json("Failed to create the product");
     }
   },

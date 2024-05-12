@@ -14,16 +14,19 @@ import { useNavigation } from "@react-navigation/native";
 const ProductCardView = ({ item }) => {
   const navigation = useNavigation();
   return (
-    <TouchableOpacity onPress={() => navigation.navigate("ProductDetails", {item})}>
+    <TouchableOpacity
+      onPress={() => navigation.navigate("ProductDetails", { item })}
+    >
       <View style={styles.container}>
         <View style={styles.imageContainer}>
-          <Image source={image2} style={styles.image} />
+          <Image source={item.image} style={styles.image} />
         </View>
 
+      
         <View style={styles.details}>
           <Text style={styles.title} numberOfLines={1}>
             {" "}
-            {item.title}{" "}
+            {item.title}
           </Text>
           <Text style={styles.supplier} numberOfLines={1}>
             {" "}
