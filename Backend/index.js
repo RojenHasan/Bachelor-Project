@@ -9,6 +9,7 @@ const paymentRoute = require("./routes/payment");
 const orderRoute = require("./routes/orders");
 const userRoute = require("./routes/user");
 const cartRoute = require("./routes/cart");
+//const uploadRote = require("./controllers/routeUpload");
 
 const port = 3000;
 
@@ -28,6 +29,7 @@ app.use(
     allowedHeaders: ["Content-Type", "Authorization"], // Specify allowed headers
   })
 );
+//app.use("/api", uploadRote);
 app.use("/api/", authRoute);
 app.use("/api/products", productRoute);
 app.use("/api/payments", paymentRoute);

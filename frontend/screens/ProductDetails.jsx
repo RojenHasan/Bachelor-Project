@@ -1,7 +1,9 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, Image } from "react-native";
+import { View, Text, TouchableOpacity, Image, Alert } from "react-native";
 import styles from "./productDetail.style";
 import { useRoute } from "@react-navigation/native";
+import axios from "axios"; // Import axios
+
 import {
   Feather,
   Ionicons,
@@ -28,6 +30,23 @@ const ProductDetails = ({ navigation }) => {
       setCount(count - 1);
     }
   };
+  const addToCart = async () => {
+    try {
+      const response = await axios.post("http://192.168.1.32:3000/api/carts", {
+        userId: "USER_ID", // Replace with actual user ID
+        cartItem: item._id, // Assuming item has an _id property
+        quantity: count,
+      });
+
+      // Handle success
+      console.log(response.data); // Output the response (e.g., "Product added to cart")
+      Alert.alert("Success", "Product added to cart");
+    } catch (error) {
+      // Handle error
+      console.error("Error adding product to cart:", error);
+      Alert.alert("Error", "Failed to add product to cart");
+    }
+  };
   return (
     <View style={styles.container}>
       <View style={styles.upperRow}>
@@ -39,8 +58,7 @@ const ProductDetails = ({ navigation }) => {
           <Ionicons name="heart" size={30} color={COLORS.primary} />
         </TouchableOpacity>
       </View>
-      <Image source={image2} style={styles.image} />
-
+      <Image source={{ uri: item.image }} style={styles.image} />
       <View style={styles.details}>
         <View style={styles.titleRow}>
           <Text style={styles.title}>{item.title}</Text>
@@ -91,7 +109,7 @@ const ProductDetails = ({ navigation }) => {
             <Text style={styles.cartTitle}>Buy Now</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={() => {}} style={styles.addCart}>
+          <TouchableOpacity onPress={addToCart} style={styles.addCart}>
             <Fontisto name="shopping-bag" size={22} color={COLORS.lightWhite} />
           </TouchableOpacity>
         </View>
