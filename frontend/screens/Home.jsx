@@ -13,6 +13,7 @@ import Headings from "../components/home/Headings";
 import ProductRow from "../components/products/ProductRow";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
+import ChatBot from "./ChatBot";
 
 const Home = () => {
   const navigation = useNavigation();
@@ -59,6 +60,10 @@ const Home = () => {
       navigation.navigate("Login");
     }
   };
+  const handleChatBotPress = () => {
+    // Navigate to the ChatBot screen
+    navigation.navigate("ChatBot");
+  };
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
@@ -87,6 +92,18 @@ const Home = () => {
           <Carousel />
           <Headings />
           <ProductRow />
+          <View style={{ marginVertical: 10 }} />
+          <TouchableOpacity onPress={handleChatBotPress}>
+            <View
+              style={{ justifyContent: "flex-end", alignItems: "flex-end" }}
+            >
+              <Ionicons
+                name="chatbubble-ellipses-outline"
+                size={44}
+                color="black"
+              />
+            </View>
+          </TouchableOpacity>
           <View style={{ marginVertical: 100 }} />
         </ScrollView>
       </SafeAreaView>

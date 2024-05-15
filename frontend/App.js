@@ -14,6 +14,7 @@ import {
   Orders,
   Signup,
 } from "./screens";
+import ChatBot from "./screens/ChatBot";
 
 const Stack = createNativeStackNavigator();
 export default function App() {
@@ -77,6 +78,11 @@ export default function App() {
         <Stack.Screen
           name="Signup"
           component={Signup}
+          options={{ headerShown: false }}
+        />
+         <Stack.Screen
+          name="ChatBot"
+          component={ChatBot}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>
