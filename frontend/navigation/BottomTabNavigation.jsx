@@ -6,7 +6,8 @@ import { Ionicons } from "@expo/vector-icons";
 import { COLORS } from "../constants/index";
 import Search from "../screens/Search";
 import Profile from "../screens/Profile";
-import AddItem from '../screens/AddItem'
+import AddItem from "../screens/AddItem";
+import Category from "../screens/Category";
 
 const Tab = createBottomTabNavigator();
 
@@ -35,6 +36,21 @@ const BottomTabNavigation = () => {
             return (
               <Ionicons
                 name={focused ? "home" : "home-outline"}
+                size={24}
+                color={focused ? COLORS.primary : COLORS.gray2}
+              />
+            );
+          },
+        }}
+      />
+      <Tab.Screen
+        name="Category"
+        component={Category}
+        options={{
+          tabBarIcon: ({ focused }) => {
+            return (
+              <Ionicons
+                name={focused ? "list" : "list-outline"}
                 size={24}
                 color={focused ? COLORS.primary : COLORS.gray2}
               />

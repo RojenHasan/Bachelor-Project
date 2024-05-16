@@ -15,6 +15,11 @@ import {
   Signup,
 } from "./screens";
 import ChatBot from "./screens/ChatBot";
+import SofasOverview from "./screens/SofasOverview";
+import KidsFurnitureOverview from "./screens/KidsFurniture";
+import DiningFurnitureOverview from "./screens/DiningFurniture";
+import BedsOverview from "./screens/BedsOverview";
+import FurnitureCategory from "./screens/furnitureCategory";
 
 const Stack = createNativeStackNavigator();
 export default function App() {
@@ -80,9 +85,34 @@ export default function App() {
           component={Signup}
           options={{ headerShown: false }}
         />
-         <Stack.Screen
+        <Stack.Screen
           name="ChatBot"
           component={ChatBot}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="FurnitureCategory"
+          component={FurnitureCategory}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="SofasOverview"
+          component={SofasOverview}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="KidsFurnitureOverview"
+          component={KidsFurnitureOverview}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="DiningFurnitureOverview"
+          component={DiningFurnitureOverview}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="BedsOverview"
+          component={BedsOverview}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

@@ -22,7 +22,6 @@ const ProductCardView = ({ item }) => {
           <Image source={item.image} style={styles.image} />
         </View>
 
-      
         <View style={styles.details}>
           <Text style={styles.title} numberOfLines={1}>
             {" "}
