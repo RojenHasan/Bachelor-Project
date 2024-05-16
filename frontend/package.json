@@ -45,7 +45,8 @@
     "yup": "^1.4.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.24.0"
+    "@babel/core": "^7.24.0",
+    "supabase": "^1.167.4"
   },
   "private": true
 }
