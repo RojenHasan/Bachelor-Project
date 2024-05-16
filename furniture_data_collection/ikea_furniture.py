@@ -33,7 +33,7 @@ def scrape_all_pages(base_url, max_pages, filename):
     save_to_csv(all_products, filename)
     print(f"Scraping complete. {len(all_products)} products scraped.")
 
-base_url = 'https://www.ikea.com/us/en/cat/dining-furniture-700417/'
-max_pages = 30  # You may need to adjust this based on the actual number of pages
-filename = 'ikea_dining.csv'
+base_url = 'https://www.ikea.com/us/en/cat/childrens-dressers-and-chests-18708/'
+max_pages = 1 # You may need to adjust this based on the actual number of pages
+filename = 'ikea_furniture.csv'
 scrape_all_pages(base_url, max_pages, filename)

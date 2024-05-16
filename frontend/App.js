@@ -19,7 +19,7 @@ import SofasOverview from "./screens/SofasOverview";
 import KidsFurnitureOverview from "./screens/KidsFurniture";
 import DiningFurnitureOverview from "./screens/DiningFurniture";
 import BedsOverview from "./screens/BedsOverview";
-import FurnitureCategory from "./screens/furnitureCategory";
+import FurnitureCategory from "./screens/FurnitureCategory";
 
 const Stack = createNativeStackNavigator();
 export default function App() {
