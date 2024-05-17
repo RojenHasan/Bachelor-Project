@@ -20,6 +20,7 @@ import KidsFurnitureOverview from "./screens/KidsFurniture";
 import DiningFurnitureOverview from "./screens/DiningFurniture";
 import BedsOverview from "./screens/BedsOverview";
 import FurnitureCategory from "./screens/FurnitureCategory";
+import SofaDetails from "./screens/SofaDetails";
 
 const Stack = createNativeStackNavigator();
 export default function App() {
@@ -98,6 +99,11 @@ export default function App() {
         <Stack.Screen
           name="SofasOverview"
           component={SofasOverview}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="SofaDetails"
+          component={SofaDetails}
           options={{ headerShown: false }}
         />
         <Stack.Screen

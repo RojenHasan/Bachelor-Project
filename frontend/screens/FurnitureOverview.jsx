@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, FlatList, Image, SafeAreaView } from "react-native";
 import { supabase } from "../src/lib/supabase";
-import SofaItem from "../components/SofaItem";
 import { StatusBar } from "expo-status-bar";
 const FurnitureOverview = () => {
   const [furnitures, setFurniture] = useState([]);
