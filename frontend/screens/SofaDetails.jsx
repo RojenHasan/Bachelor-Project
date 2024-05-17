@@ -98,7 +98,7 @@ const SofaDetails = ({ navigation }) => {
         <Text style={styles.similar}>Similar products</Text>
         <FlatList
           data={similarSofas}
-          renderItem={({ item }) => <SofasOverview item={item} />}
+          renderItem={({ item }) => <Text>{item.price}</Text>}
           keyExtractor={(item) => item.id.toString()}
         />
       </View>

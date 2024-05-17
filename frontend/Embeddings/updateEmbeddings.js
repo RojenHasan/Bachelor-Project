@@ -5,7 +5,11 @@ const getFurnitures = () => {
 };
 
 const addFurnitureEmbedding = async (furniture) => {
-  const embedding = await generateEmbedding(furniture.type, furniture.price);
+  const { id, type, price, description } = furniture;
+  const numericPrice = parseInt(price, 10); // Convert price to integer
+
+  const embedding = await generateEmbedding(type, numericPrice, description);
+
   await supabase.from("furniture").update({ embedding }).eq("id", furniture.id);
 };
 
