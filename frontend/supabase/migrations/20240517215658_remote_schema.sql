@@ -26,6 +26,27 @@ CREATE EXTENSION IF NOT EXISTS "supabase_vault" WITH SCHEMA "vault";
 
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA "extensions";
 
+CREATE EXTENSION IF NOT EXISTS "vector" WITH SCHEMA "extensions";
+
+CREATE OR REPLACE FUNCTION "public"."match_furniture"("query_embedding" "extensions"."vector", "match_threshold" double precision, "match_count" integer) RETURNS TABLE("id" bigint, "name" "text", "description" "text", "price" "text", "photo_url" "text", "type" "text", "similarity" double precision)
+    LANGUAGE "sql" STABLE
+    AS $$
+  select
+    furniture.id,
+    furniture.name,
+		furniture.description,
+    furniture.price,
+    furniture.photo_url,
+    furniture.type,
+    1 - (furniture.embedding <=> query_embedding) as similarity
+  from furniture
+  where 1 - (furniture.embedding <=> query_embedding) > match_threshold
+  order by similarity desc
+  limit match_count;
+$$;
+
+ALTER FUNCTION "public"."match_furniture"("query_embedding" "extensions"."vector", "match_threshold" double precision, "match_count" integer) OWNER TO "postgres";
+
 SET default_tablespace = '';
 
 SET default_table_access_method = "heap";
@@ -37,7 +58,8 @@ CREATE TABLE IF NOT EXISTS "public"."furniture" (
     "description" character varying,
     "price" character varying,
     "photo_url" character varying,
-    "type" character varying
+    "type" character varying,
+    "embedding" "extensions"."vector"(384)
 );
 
 ALTER TABLE "public"."furniture" OWNER TO "postgres";

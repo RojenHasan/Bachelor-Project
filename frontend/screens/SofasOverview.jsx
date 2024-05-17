@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
     marginVertical: 5,
     alignItems: "center",
     elevation: 2,
-    position: "relative", // Ensure position is set to relative
+    position: "relative",
   },
   imageContainer: {
     marginRight: 10,

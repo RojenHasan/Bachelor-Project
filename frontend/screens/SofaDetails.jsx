@@ -45,7 +45,7 @@ const SofaDetails = ({ navigation }) => {
       const { data } = await supabase.rpc("match_furniture", {
         query_embedding: item.embedding,
         match_threshold: 0.78,
-        match_count: 5,
+        match_count: 10,
       });
       setSimilarSofas(data || []); // Update similarSofas state with fetched data or an empty array if data is null
     };
@@ -56,6 +56,32 @@ const SofaDetails = ({ navigation }) => {
   if (!sofa) {
     return <ActivityIndicator />;
   }
+
+  const renderSimilarSofaItem = ({ item }) => (
+    <TouchableOpacity
+      onPress={() => navigation.navigate("SofaDetails", { item })}
+    >
+      <View style={styles.similarItemContainer}>
+        <Image
+          source={{ uri: item.photo_url }}
+          style={styles.similarItemImage}
+        />
+        <View style={styles.similarItemDetails}>
+          <Text style={styles.similarItemTitle} numberOfLines={1}>
+            {item.name}
+          </Text>
+          <Text style={styles.similarItemPrice}>$ {item.price}</Text>
+        </View>
+        <TouchableOpacity style={styles.similarItemIcon}>
+          <Ionicons
+            name="information-circle-outline"
+            size={24}
+            color={COLORS.primary}
+          />
+        </TouchableOpacity>
+      </View>
+    </TouchableOpacity>
+  );
 
   return (
     <View style={styles.container}>
@@ -77,14 +103,6 @@ const SofaDetails = ({ navigation }) => {
           </View>
         </View>
 
-        <View style={styles.ratingRow}>
-          <View style={styles.rating}>
-            {[1, 2, 3, 4, 5].map((index) => (
-              <Ionicons key={index} name="star" size={24} color="gold" />
-            ))}
-            <Text style={styles.ratingText}>(4.9)</Text>
-          </View>
-        </View>
         <View style={styles.descriptionWrapper}>
           <Text style={styles.description}>Description</Text>
           <Text style={styles.descText}>{item.description}</Text>
@@ -98,7 +116,7 @@ const SofaDetails = ({ navigation }) => {
         <Text style={styles.similar}>Similar products</Text>
         <FlatList
           data={similarSofas}
-          renderItem={({ item }) => <Text>{item.price}</Text>}
+          renderItem={renderSimilarSofaItem}
           keyExtractor={(item) => item.id.toString()}
         />
       </View>
@@ -158,27 +176,8 @@ const styles = StyleSheet.create({
     width: SIZES.width - 44,
     top: 10,
   },
-  ratingRow: {
-    paddingBottom: SIZES.small,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    width: SIZES.width - 10,
-  },
-  rating: {
-    top: SIZES.large,
-    flexDirection: "row",
-    justifyContent: "flex-start",
-    alignItems: "center",
-    marginHorizontal: SIZES.large,
-  },
-  ratingText: {
-    color: COLORS.gray,
-    fontFamily: "medium",
-    paddingHorizontal: SIZES.xSmall,
-  },
   descriptionWrapper: {
-    marginTop: SIZES.large * 2,
+    marginTop: SIZES.large,
     marginHorizontal: SIZES.large,
   },
   description: {
@@ -209,5 +208,43 @@ const styles = StyleSheet.create({
   priceWrapper: {
     backgroundColor: COLORS.secondary,
     borderRadius: SIZES.large,
+  },
+  similar: {
+    marginTop: SIZES.large,
+    marginHorizontal: SIZES.large,
+    fontFamily: "bold",
+    fontSize: SIZES.large,
+  },
+  similarItemContainer: {
+    flexDirection: "row",
+    backgroundColor: COLORS.lightWhite,
+    borderRadius: SIZES.medium,
+    padding: SIZES.small,
+    marginHorizontal: SIZES.large,
+    marginVertical: SIZES.small,
+    alignItems: "center",
+    elevation: 2,
+  },
+  similarItemImage: {
+    width: 80,
+    height: 80,
+    borderRadius: SIZES.medium,
+    marginRight: SIZES.small,
+  },
+  similarItemDetails: {
+    flex: 1,
+    marginRight: SIZES.small,
+  },
+  similarItemTitle: {
+    fontSize: SIZES.medium,
+    fontWeight: "bold",
+    marginBottom: SIZES.xSmall,
+  },
+  similarItemPrice: {
+    fontSize: SIZES.medium,
+    color: COLORS.gray,
+  },
+  similarItemIcon: {
+    padding: SIZES.small,
   },
 });
