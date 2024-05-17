@@ -1,24 +1,61 @@
-import React, { useState } from "react";
-import { View, Text, TouchableOpacity, Image, Alert } from "react-native";
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  FlatList,
+  Image,
+  ActivityIndicator,
+} from "react-native";
 import { useRoute } from "@react-navigation/native";
-import axios from "axios"; // Import axios
 import { StyleSheet } from "react-native";
-import {
-  Feather,
-  Ionicons,
-  SimpleLineIcons,
-  Fontisto,
-  MaterialCommunityIcons,
-} from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import { COLORS, SIZES } from "../constants";
-import image2 from "../assets/images/image33.jpg";
-import {
-  ScrollView,
-  GestureHandlerRootView,
-} from "react-native-gesture-handler";
+import { supabase } from "../src/lib/supabase";
+import SofasOverview from "./SofasOverview";
+import { renderSofaItem } from "./SofasOverview";
+
 const SofaDetails = ({ navigation }) => {
   const route = useRoute();
   const { item } = route.params;
+  const [sofa, setSofa] = useState(null);
+  const [similarSofas, setSimilarSofas] = useState([]);
+
+  useEffect(() => {
+    const fetchSofa = async () => {
+      const { data: sofa } = await supabase
+        .from("furniture")
+        .select("*")
+        .eq("id", item.id)
+        .single();
+
+      if (sofa) {
+        setSofa(sofa);
+      }
+    };
+    fetchSofa();
+  }, [item.id]); // Fetch sofa details when item.id changes
+
+  useEffect(() => {
+    if (!item?.embedding) {
+      return;
+    }
+
+    const fetchSimilarSofas = async () => {
+      const { data } = await supabase.rpc("match_furniture", {
+        query_embedding: item.embedding,
+        match_threshold: 0.78,
+        match_count: 5,
+      });
+      setSimilarSofas(data || []); // Update similarSofas state with fetched data or an empty array if data is null
+    };
+
+    fetchSimilarSofas();
+  }, [item?.embedding]);
+
+  if (!sofa) {
+    return <ActivityIndicator />;
+  }
 
   return (
     <View style={styles.container}>
@@ -58,6 +95,12 @@ const SofaDetails = ({ navigation }) => {
             <Text style={styles.cartTitle}>Buy Now</Text>
           </TouchableOpacity>
         </View>
+        <Text style={styles.similar}>Similar products</Text>
+        <FlatList
+          data={similarSofas}
+          renderItem={({ item }) => <SofasOverview item={item} />}
+          keyExtractor={(item) => item.id.toString()}
+        />
       </View>
     </View>
   );
@@ -148,14 +191,6 @@ const styles = StyleSheet.create({
     textAlign: "justify",
     marginBottom: SIZES.small,
   },
-  location: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    backgroundColor: COLORS.secondary,
-    padding: 5,
-    borderRadius: SIZES.large,
-  },
   cartTitle: {
     marginLeft: SIZES.small,
     fontFamily: "semibold",
@@ -174,14 +209,5 @@ const styles = StyleSheet.create({
   priceWrapper: {
     backgroundColor: COLORS.secondary,
     borderRadius: SIZES.large,
-  },
-  addCart: {
-    width: 37,
-    height: 37,
-    borderRadius: 50,
-    margin: SIZES.small,
-    backgroundColor: COLORS.black,
-    alignItems: "center",
-    justifyContent: "center",
   },
 });
