@@ -13,7 +13,7 @@ const SofaItem = ({ item: sofa, index }: SofaItemPros) => {
                 <Text style={styles.title}>{sofa.name}</Text>
                 <Text style={styles.subtitle}>{sofa.description}</Text>
                 <Text style={styles.subtitle}>${sofa.price}</Text>
-
+                
 
             </View>
         </Pressable>

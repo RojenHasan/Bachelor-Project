@@ -8,10 +8,13 @@ const SofasOverview = () => {
 
   useEffect(() => {
     const fetchSofas = async () => {
-      let { data: sofas, error } = await supabase.from("sofas").select("*");
+      let { data: sofas, error } = await supabase
+        .from("furniture")
+        .select("*")
+        .ilike("type", "%Sofa%", { raw: true });
 
       console.log(error);
-      //console.log(sofas);
+      console.log(sofas);
       if (sofas) {
         setSofas(sofas);
       }

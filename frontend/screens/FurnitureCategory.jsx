@@ -1,5 +1,17 @@
 import React from "react";
-import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Image,
+  StyleSheet,
+  FlatList,
+  ScrollView,
+  SafeAreaView,
+} from "react-native";
+import FurnitureOverview from "./FurnitureOverview";
+import { COLORS } from "../constants";
+import Carousel from "react-native-snap-carousel";
 
 const sofa = require("../assets/images/products/sofa.jpg");
 const kids = require("../assets/images/products/kids.jpg");
@@ -28,11 +40,12 @@ const FurnitureCategory = ({ navigation }) => {
             style={styles.categoryButton}
             onPress={() => handleCategoryPress(category.name)}
           >
-            <Image source={category.photo} style={styles.categoryImage} />
+            <Image source={category.photo} style={styles.image} />
             <Text style={styles.categoryText}>{category.name}</Text>
           </TouchableOpacity>
         ))}
       </View>
+      <FurnitureOverview />
     </View>
   );
 };
@@ -40,33 +53,45 @@ const FurnitureCategory = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "flex-start", // Align items to the top of the container
-    paddingTop: 50, // Add padding from the top
+    backgroundColor: "#fff",
+    padding: 10,
   },
-  heading: {
-    fontSize: 24,
+  categoryContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#fff",
+    padding: 10,
+    borderRadius: 10,
+    margin: 10,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    backgroundColor: COLORS.gray3,
+  },
+  image: {
+    width: 100,
+    height: 100,
+    marginBottom: 10,
+  },
+  text: {
+    fontSize: 16,
     fontWeight: "bold",
-    marginBottom: 30,
+    textAlign: "center",
   },
   rowContainer: {
     flexDirection: "row",
-    flexWrap: "wrap",
     justifyContent: "center",
   },
   categoryButton: {
     alignItems: "center",
     marginBottom: 20,
-    marginHorizontal: 10, // Add some horizontal margin for spacing between categories
-  },
-  categoryImage: {
-    width: 150,
-    height: 150,
-    marginBottom: 10,
-    borderRadius: 5,
-  },
-  categoryText: {
-    fontSize: 16,
+    marginHorizontal: 10,
+    backgroundColor: COLORS.gray2,
   },
 });
 
