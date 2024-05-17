@@ -23,7 +23,7 @@ const Category = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.heading}>Categories</Text>
-      <View style={styles.rowContainer}>
+      <View style={styles.gridContainer}>
         {categories.map((category, index) => (
           <TouchableOpacity
             key={index}
@@ -42,33 +42,43 @@ const Category = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "flex-start", // Align items to the top of the container
-    paddingTop: 50, // Add padding from the top
+    backgroundColor: "#fff",
+    paddingHorizontal: 20,
+    paddingTop: 50,
   },
   heading: {
     fontSize: 24,
     fontWeight: "bold",
-    marginBottom: 30,
+    marginBottom: 20,
+    textAlign: "center",
   },
-  rowContainer: {
+  gridContainer: {
     flexDirection: "row",
     flexWrap: "wrap",
-    justifyContent: "center",
+    justifyContent: "space-around",
   },
   categoryButton: {
     alignItems: "center",
-    marginBottom: 20,
-    marginHorizontal: 10, // Add some horizontal margin for spacing between categories
+    width: 150,
+    marginVertical: 10,
+    backgroundColor: "#f0f0f0",
+    padding: 10,
+    borderRadius: 10,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
   categoryImage: {
-    width: 150,
-    height: 150,
-    marginBottom: 10,
+    width: 120,
+    height: 120,
     borderRadius: 5,
+    marginBottom: 10,
   },
   categoryText: {
     fontSize: 16,
+    textAlign: "center",
   },
 });
 

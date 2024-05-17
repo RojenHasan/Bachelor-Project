@@ -29,23 +29,33 @@ const FurnitureCategory = ({ navigation }) => {
   const handleCategoryPress = (categoryName) => {
     navigation.navigate(`${categoryName.replace(/\s+/g, "")}Overview`);
   };
-
+  const renderCarouselItem = ({ item, index }) => {
+    return (
+      <TouchableOpacity
+        key={index}
+        style={styles.categoryButton}
+        onPress={() => handleCategoryPress(item.name)}
+      >
+        <Image source={item.photo} style={styles.image} />
+        <Text style={styles.categoryText}>{item.name}</Text>
+      </TouchableOpacity>
+    );
+  };
   return (
     <View style={styles.container}>
       <Text style={styles.heading}>Categories</Text>
-      <View style={styles.rowContainer}>
-        {categories.map((category, index) => (
-          <TouchableOpacity
-            key={index}
-            style={styles.categoryButton}
-            onPress={() => handleCategoryPress(category.name)}
-          >
-            <Image source={category.photo} style={styles.image} />
-            <Text style={styles.categoryText}>{category.name}</Text>
-          </TouchableOpacity>
-        ))}
+      <Carousel
+        data={categories}
+        renderItem={renderCarouselItem}
+        sliderWidth={300} // Adjust as per your design
+        itemWidth={250} // Adjust as per your design
+        loop={true}
+        layout="default"
+      />
+      <View style={styles.overviewContainer}>
+        <Text style={styles.heading}>Overview</Text>
+        <FurnitureOverview />
       </View>
-      <FurnitureOverview />
     </View>
   );
 };
@@ -56,42 +66,38 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     padding: 10,
   },
-  categoryContainer: {
+  heading: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 10,
+    textAlign: "center",
+  },
+  categoryButton: {
     alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "#fff",
-    padding: 10,
+    marginHorizontal: 10,
+    backgroundColor: COLORS.gray2,
     borderRadius: 10,
-    margin: 10,
+    padding: 10,
     shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
-    backgroundColor: COLORS.gray3,
   },
   image: {
     width: 100,
     height: 100,
     marginBottom: 10,
+    borderRadius: 10,
   },
-  text: {
+  categoryText: {
     fontSize: 16,
     fontWeight: "bold",
     textAlign: "center",
   },
-  rowContainer: {
-    flexDirection: "row",
-    justifyContent: "center",
-  },
-  categoryButton: {
-    alignItems: "center",
-    marginBottom: 20,
-    marginHorizontal: 10,
-    backgroundColor: COLORS.gray2,
+  overviewContainer: {
+    flex: 1,
+    marginTop: -450,
   },
 });
 
