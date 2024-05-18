@@ -92,7 +92,7 @@ const Home = () => {
         <ScrollView>
           <Welcome />
           <Carousel />
-          <NewestFurniture/> 
+          <NewestFurniture />
 
           <View style={{ marginVertical: 10 }} />
           <TouchableOpacity onPress={handleChatBotPress}>
@@ -106,7 +106,7 @@ const Home = () => {
               />
             </View>
           </TouchableOpacity>
-          <View style={{ marginVertical: 100 }} />
+          <View style={{ marginVertical: 30 }} />
         </ScrollView>
       </SafeAreaView>
     </GestureHandlerRootView>
