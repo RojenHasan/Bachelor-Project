@@ -10,10 +10,10 @@ import {
 import { Welcome } from "../components";
 import Carousel from "../components/home/Carousel";
 import Headings from "../components/home/Headings";
-import ProductRow from "../components/products/ProductRow";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import ChatBot from "./ChatBot";
+import NewFurniture from "./NewFurniture";
 
 const Home = () => {
   const navigation = useNavigation();
@@ -87,11 +87,11 @@ const Home = () => {
             </View>
           </View>
         </View>
+        
         <ScrollView>
           <Welcome />
           <Carousel />
           <Headings />
-          <ProductRow />
           <View style={{ marginVertical: 10 }} />
           <TouchableOpacity onPress={handleChatBotPress}>
             <View

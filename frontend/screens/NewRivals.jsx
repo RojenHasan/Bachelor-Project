@@ -8,14 +8,13 @@ import {
   MaterialCommunityIcons,
 } from "@expo/vector-icons";
 import { COLORS } from "../constants";
-import ProductList from "../components/products/ProductList";
 
 const NewRivals = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.wrapper}>
         <View style={styles.upperRow}>
-          <TouchableOpacity  onPress={() => navigation.goBack()}>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
             <Ionicons
               name="chevron-back-circle"
               size={30}
@@ -24,7 +23,6 @@ const NewRivals = ({ navigation }) => {
           </TouchableOpacity>
           <Text style={styles.heading}>Products</Text>
         </View>
-        <ProductList />
       </View>
     </SafeAreaView>
   );

@@ -22,6 +22,7 @@ import BedsOverview from "./screens/BedsOverview";
 import FurnitureCategory from "./screens/FurnitureCategory";
 import FurnitureDetails from "./screens/FurnitureDetails";
 import OutdoorsOverview from "./screens/OutdoorOverview";
+import NewFurniture from "./screens/NewFurniture";
 
 const Stack = createNativeStackNavigator();
 export default function App() {
@@ -63,8 +64,8 @@ export default function App() {
           options={{ headerShown: false }}
         />
         <Stack.Screen
-          name="ProductList"
-          component={NewRivals}
+          name="NewFurniture"
+          component={NewFurniture}
           options={{ headerShown: false }}
         />
         <Stack.Screen

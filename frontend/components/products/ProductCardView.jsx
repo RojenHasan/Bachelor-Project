@@ -25,7 +25,7 @@ const ProductCardView = ({ item }) => {
         <View style={styles.details}>
           <Text style={styles.title} numberOfLines={1}>
             {" "}
-            {item.title}
+            rojin hasan ,jj
           </Text>
           <Text style={styles.supplier} numberOfLines={1}>
             {" "}
