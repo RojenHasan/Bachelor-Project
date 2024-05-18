@@ -4,6 +4,7 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
+  SafeAreaView,
   FlatList,
   Image,
   ActivityIndicator,
@@ -12,8 +13,6 @@ import { useRoute } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import { COLORS, SIZES } from "../constants";
 import { supabase } from "../src/lib/supabase";
-import SofasOverview from "./SofasOverview";
-import { renderSofaItem } from "./SofasOverview";
 
 const FurnitureDetails = ({ navigation }) => {
   const route = useRoute();
@@ -34,7 +33,7 @@ const FurnitureDetails = ({ navigation }) => {
       }
     };
     fetchSofa();
-  }, [item.id]); // Fetch sofa details when item.id changes
+  }, [item.id]);
 
   useEffect(() => {
     if (!item?.embedding) {
@@ -47,7 +46,7 @@ const FurnitureDetails = ({ navigation }) => {
         match_threshold: 0.78,
         match_count: 10,
       });
-      setSimilarSofas(data || []); // Update similarSofas state with fetched data or an empty array if data is null
+      setSimilarSofas(data || []);
     };
 
     fetchSimilarSofas();
@@ -97,7 +96,9 @@ const FurnitureDetails = ({ navigation }) => {
       <Image source={{ uri: item.photo_url }} style={styles.image} />
       <View style={styles.details}>
         <View style={styles.titleRow}>
-          <Text style={styles.title}>{item.name}</Text>
+          <Text style={styles.title}>
+            {item.name.split(" ").slice(0, 2).join(" ").replace(/,$/, "")}
+          </Text>
           <View style={styles.priceWrapper}>
             <Text style={styles.price}>$ {item.price}</Text>
           </View>
@@ -109,16 +110,25 @@ const FurnitureDetails = ({ navigation }) => {
         </View>
 
         <View style={styles.cartRow}>
-          <TouchableOpacity onPress={() => {}} style={styles.cartBtn}>
-            <Text style={styles.cartTitle}>Buy Now</Text>
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate("Contact", { email: item.email, name: item.name })
+            }
+            style={styles.cartBtn}
+          >
+            <Text style={styles.cartTitle}>Contact</Text>
           </TouchableOpacity>
         </View>
-        <Text style={styles.similar}>Similar products</Text>
-        <FlatList
-          data={similarSofas}
-          renderItem={renderSimilarSofaItem}
-          keyExtractor={(item) => item.id.toString()}
-        />
+        <SafeAreaView
+          style={{marginBottom:100 }}
+        >
+          <Text style={styles.similar}>Similar products</Text>
+          <FlatList
+            data={similarSofas}
+            renderItem={renderSimilarSofaItem}
+            keyExtractor={(item) => item.id.toString()}
+          />
+        </SafeAreaView>
       </View>
     </View>
   );
@@ -182,7 +192,7 @@ const styles = StyleSheet.create({
   },
   description: {
     fontFamily: "medium",
-    fontSize: SIZES.large - 2,
+    fontSize: SIZES.medium,
   },
   descText: {
     fontFamily: "regular",
@@ -203,14 +213,13 @@ const styles = StyleSheet.create({
   price: {
     padding: 10,
     fontFamily: "semibold",
-    fontSize: SIZES.large,
+    fontSize: SIZES.medium,
   },
   priceWrapper: {
     backgroundColor: COLORS.secondary,
     borderRadius: SIZES.large,
   },
   similar: {
-    marginTop: SIZES.large,
     marginHorizontal: SIZES.large,
     fontFamily: "bold",
     fontSize: SIZES.large,

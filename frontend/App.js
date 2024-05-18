@@ -21,6 +21,7 @@ import FurnitureCategory from "./screens/FurnitureCategory";
 import FurnitureDetails from "./screens/FurnitureDetails";
 import OutdoorsOverview from "./screens/OutdoorOverview";
 import NewFurniture from "./screens/NewFurniture";
+import Contact from "./screens/Contact";
 
 const Stack = createNativeStackNavigator();
 export default function App() {
@@ -119,6 +120,11 @@ export default function App() {
         <Stack.Screen
           name="BedsOverview"
           component={BedsOverview}
+          options={{ headerShown: false }}
+        />
+         <Stack.Screen
+          name="Contact"
+          component={Contact}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

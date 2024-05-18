@@ -62,6 +62,9 @@ const NewFurniture = () => {
   return (
     <View>
       <SafeAreaView>
+        <View style={styles.header}>
+          <Text style={styles.Txt(COLORS.black, 30)}>New furniture</Text>
+        </View>
         <FlatList data={furnitures} renderItem={renderSimilarSofaItem} />
       </SafeAreaView>
       <StatusBar style="auto" />
@@ -72,6 +75,16 @@ const NewFurniture = () => {
 export default NewFurniture;
 
 const styles = StyleSheet.create({
+  header: {
+    width: "100%",
+  },
+  Txt: (color, top) => ({
+    fontFamily: "bold",
+    fontSize: SIZES.xxLarge - 16,
+    marginTop: top,
+    color: color,
+    marginHorizontal: SIZES.small,
+  }),
   container: {
     flex: 1,
     backgroundColor: COLORS.lightWhite,
