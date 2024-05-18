@@ -8,6 +8,7 @@ import Search from "../screens/Search";
 import Profile from "../screens/Profile";
 import AddItem from "../screens/AddItem";
 import Category from "../screens/Category";
+import AddFurniture from "../screens/AddFurniture";
 
 const Tab = createBottomTabNavigator();
 
@@ -74,8 +75,8 @@ const BottomTabNavigation = () => {
         }}
       />
       <Tab.Screen
-        name="AddItem"
-        component={AddItem}
+        name="AddFurniture"
+        component={AddFurniture}
         options={{
           tabBarIcon: ({ focused }) => {
             return (
