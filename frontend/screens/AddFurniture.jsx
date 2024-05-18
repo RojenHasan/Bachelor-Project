@@ -69,8 +69,9 @@ const AddFurniture = () => {
     return true;
   };
   const handleAddFurniture = async () => {
-    Alert.alert("Failed to add Furniture", "All fields are required");
     if (!validateForm()) {
+      Alert.alert("Failed to add Furniture", "All fields are required");
+
       return;
     }
     const { data, error } = await supabase
@@ -101,7 +102,7 @@ const AddFurniture = () => {
 
   return (
     <ScrollView contentContainerStyle={{ paddingBottom: 60 }}>
-      <SafeAreaView style={{ marginHorizontal: 20, marginVertical:20 }}>
+      <SafeAreaView style={{ marginHorizontal: 20, marginVertical: 20 }}>
         <KeyboardAvoidingView>
           <View>
             <BackButton onPress={() => navigation.goBack()} />
@@ -205,18 +206,18 @@ const styles = StyleSheet.create({
     marginBottom: SIZES.xxLarge,
   },
   chooseImageButton: {
-    flexDirection: 'row', // Arrange children horizontally
-    alignItems: 'center', // Center items vertically
+    flexDirection: "row", // Arrange children horizontally
+    alignItems: "center", // Center items vertically
     marginBottom: 20,
   },
   chooseImageContainer: {
-    flexDirection: 'row', // Arrange children horizontally
-    alignItems: 'center', // Center items vertically
+    flexDirection: "row", // Arrange children horizontally
+    alignItems: "center", // Center items vertically
   },
   chooseImageText: {
     marginLeft: 10,
     fontSize: 16,
-    color: 'black',
+    color: "black",
   },
   motto: {
     marginBottom: 20,
