@@ -1,25 +1,64 @@
-import React, { useState } from "react";
-import { TextInput, TouchableOpacity, View, Text, Image } from "react-native";
+import React, { useState, useEffect } from "react";
+import {
+  TextInput,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  Text,
+  Image,
+} from "react-native";
+import { supabase } from "../src/lib/supabase";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Feather, Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { SIZES, COLORS } from "../constants/theme";
-import styles from "./search.style";
 import axios from "axios";
 import { FlatList } from "react-native";
 import SearchTile from "../components/products/SearchTile";
+
 const Search = () => {
+  const [furniture, setFurniture] = useState([]);
+  const [query, setQuery] = useState("");
   const [searchKey, setSeachKey] = useState("");
   const [searchResult, setSearchResult] = useState([]);
-  const handelSearch = async () => {
-    try {
-      const response = await axios.get(
-        `http://192.168.1.32:3000/api/products/search/${searchKey}`
-      );
-      setSearchResult(response.data);
-    } catch (error) {
-      console.log("failed to get products ", error);
-    }
+  useEffect(() => {
+    const fetchFurniture = async () => {
+      try {
+        let { data: furniture, error } = await supabase
+          .from("furniture")
+          .select("*");
+
+        if (error) {
+          console.error("Error fetching furniture:", error.message);
+          return;
+        }
+
+        if (furniture) {
+          setFurniture(furniture);
+        }
+      } catch (error) {
+        console.error("Error in fetchFurniture:", error.message);
+      }
+    };
+
+    fetchFurniture();
+  }, []);
+  const onPress = async () => {
+    console.log("kkk", furniture);
+
+    const { data } = await supabase.functions.invoke("embed", {
+      body: { input: query },
+    });
+    console.log("kkk", furniture);
+
+    const { data: furniture } = await supabase.rpc("match_furniture", {
+      query_embedding: data.embedding,
+      match_threshold: 0.78,
+      match_count: 20,
+    });
+    setFurniture(furniture);
+    console.log("kkk", furniture);
+    setQuery("");
   };
   return (
     <SafeAreaView>
@@ -34,22 +73,20 @@ const Search = () => {
 
         <View style={styles.searchWrapper}>
           <TextInput
-            style={styles.searchInput}
-            value={searchKey}
-            onChangeText={setSeachKey}
-            placeholder="What are you looking for"
+            placeholder="AI: What are you looking for.."
+            placeholderTextColor={"gray"}
+            style={styles.input}
+            value={query}
+            onChangeText={setQuery}
           />
         </View>
         <View>
-          <TouchableOpacity
-            style={styles.searchBtn}
-            onPress={() => handelSearch()}
-          >
+          <TouchableOpacity style={styles.searchBtn} onPress={() => onPress()}>
             <Feather name="search" size={24} color={COLORS.offwhite} />
           </TouchableOpacity>
         </View>
       </View>
-      {searchResult.length === 0 ? (
+      {query.length === 0 ? (
         <View style={{ flex: 1 }}>
           <Image
             source={require("../../frontend/assets/images/Pose23.png")}
@@ -58,7 +95,7 @@ const Search = () => {
         </View>
       ) : (
         <FlatList
-          data={searchResult}
+          data={furniture}
           keyExtractor={(item) => item._id}
           renderItem={({ item }) => <SearchTile item={item} />}
           style={{ marginHorizontal: 12 }}
@@ -70,124 +107,46 @@ const Search = () => {
 
 export default Search;
 
-/*
-import React, { useState } from "react";
-import { TextInput, TouchableOpacity, View, Text, Image } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { Feather, Ionicons } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
-import { SIZES, COLORS } from "../constants/theme";
-import styles from "./search.style";
-import axios from "axios";
-import { FlatList } from "react-native";
-import SearchTile from "../components/products/SearchTile";
-import Voice from "@react-native-voice/voice";
-
-const Search = () => {
-  const [searchKey, setSeachKey] = useState("");
-  const [searchResult, setSearchResult] = useState([]);
-
-  const [recordResult, setRecordResult] = useState("");
-  const [error, setError] = useState("");
-  const [isRecording, setIsRecording] = useState(false);
-
-  Voice.onSpeechStart = () => setIsRecording(true);
-  Voice.onSpeechEnd = () => setIsRecording(false);
-  Voice.onSpeechError = (err) => setError(err.error);
-  Voice.onSpeechResults = (result) => setRecordResult(result.value[0]);
-
-  const startRecording = async () => {
-    try {
-      if (Voice) {
-        // Check if Voice object exists
-        await Voice.start("en-US");
-        setIsRecording(true);
-      } else {
-        console.log("Voice object is not available");
-      }
-    } catch (err) {
-      setError(err);
-      console.log(err);
-    }
-  };
-
-  const stopRecording = async () => {
-    try {
-      if (Voice) {
-        // Check if Voice object exists
-        await Voice.stop();
-        setIsRecording(false);
-      } else {
-        console.log("Voice object is not available");
-      }
-    } catch (error) {
-      setError(error);
-      console.log(error);
-    }
-  };
-
-  const handelSearch = async () => {
-    try {
-      const response = await axios.get(
-        `http://192.168.1.32:3000/api/products/search/${searchKey}`
-      );
-      setSearchResult(response.data);
-    } catch (error) {
-      console.log("failed to get products ", error);
-    }
-  };
-  return (
-    <SafeAreaView>
-      {error && <Text>{error.toString()}</Text>}
-      <Text>{recordResult}</Text>
-
-      <TouchableOpacity onPress={isRecording ? stopRecording : startRecording}>
-        <Text>{isRecording ? "stop recording" : "start recording"}</Text>
-      </TouchableOpacity>
-      <View style={styles.searchContainer}>
-        <TouchableOpacity>
-          <Ionicons
-            name="camera-outline"
-            size={SIZES.xLarge}
-            style={styles.searchIcon}
-          />
-        </TouchableOpacity>
-
-        <View style={styles.searchWrapper}>
-          <TextInput
-            style={styles.searchInput}
-            value={searchKey}
-            onChangeText={setSeachKey}
-            placeholder="What are you looking for"
-          />
-        </View>
-        <View>
-          <TouchableOpacity
-            style={styles.searchBtn}
-            onPress={() => handelSearch()}
-          >
-            <Feather name="search" size={24} color={COLORS.offwhite} />
-          </TouchableOpacity>
-        </View>
-      </View>
-      {searchResult.length === 0 ? (
-        <View style={{ flex: 1 }}>
-          <Image
-            source={require("../../frontend/assets/images/Pose23.png")}
-            style={styles.searchImage}
-          />
-        </View>
-      ) : (
-        <FlatList
-          data={searchResult}
-          keyExtractor={(item) => item._id}
-          renderItem={({ item }) => <SearchTile item={item} />}
-          style={{ marginHorizontal: 12 }}
-        />
-      )}
-    </SafeAreaView>
-  );
-};
-
-export default Search;
- */
+const styles = StyleSheet.create({
+  searchContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignContent: "center",
+    marginHorizontal: SIZES.small,
+    backgroundColor: COLORS.secondary,
+    borderRadius: SIZES.medium,
+    marginVertical: SIZES.medium,
+    height: 50,
+  },
+  searchIcon: {
+    marginHorizontal: 10,
+    color: COLORS.gray,
+    marginTop: SIZES.small,
+  },
+  searchWrapper: {
+    flex: 1,
+    backgroundColor: COLORS.secondary,
+    marginRight: SIZES.small,
+    borderRadius: SIZES.small,
+  },
+  searchInput: {
+    fontFamily: "regular",
+    width: "100%",
+    height: "100%",
+    paddingHorizontal: SIZES.small,
+  },
+  searchBtn: {
+    width: 50,
+    height: "100%",
+    borderRadius: SIZES.medium,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: COLORS.primary,
+  },
+  searchImage: {
+    resizeMode: "contain",
+    width: SIZES.width - 100,
+    height: SIZES.height - 300,
+    opacity: 0.9,
+  },
+});

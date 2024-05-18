@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -7,10 +7,14 @@ import {
   StyleSheet,
   FlatList,
   ScrollView,
+  TextInput,
   SafeAreaView,
+  Button,
 } from "react-native";
+import { Feather, Ionicons } from "@expo/vector-icons";
+import { supabase } from "../src/lib/supabase";
+import { SIZES, COLORS } from "../constants/theme";
 import FurnitureOverview from "./FurnitureOverview";
-import { COLORS } from "../constants";
 import Carousel from "react-native-snap-carousel";
 
 const sofa = require("../assets/images/products/sofa.jpg");
@@ -19,12 +23,36 @@ const dinnig = require("../assets/images/products/dinning.jpg");
 const beds = require("../assets/images/products/beds.jpg");
 
 const FurnitureCategory = ({ navigation }) => {
+  const [furniture, setFurniture] = useState([]);
+  const [query, setQuery] = useState("");
   const categories = [
     { name: "Sofas", photo: sofa },
     { name: "Kids Furniture", photo: kids },
     { name: "Dining Furniture", photo: dinnig },
     { name: "Beds", photo: beds },
   ];
+  useEffect(() => {
+    const fetchFurniture = async () => {
+      try {
+        let { data: furniture, error } = await supabase
+          .from("furniture")
+          .select("*");
+
+        if (error) {
+          console.error("Error fetching furniture:", error.message);
+          return;
+        }
+
+        if (furniture) {
+          setFurniture(furniture);
+        }
+      } catch (error) {
+        console.error("Error in fetchFurniture:", error.message);
+      }
+    };
+
+    fetchFurniture();
+  }, []);
 
   const handleCategoryPress = (categoryName) => {
     navigation.navigate(`${categoryName.replace(/\s+/g, "")}Overview`);
@@ -43,6 +71,20 @@ const FurnitureCategory = ({ navigation }) => {
   };
   return (
     <View style={styles.container}>
+      <View style={styles.searchContainer}>
+        <TouchableOpacity>
+          <Feather name="search" size={24} style={styles.searchIcon}></Feather>
+        </TouchableOpacity>
+
+        <View style={styles.searchWrapper}>
+          <TextInput
+            style={styles.searchInput}
+            value=""
+            onPressIn={() => navigation.navigate("Search")}
+            placeholder="What are you looking for"
+          />
+        </View>
+      </View>
       <Text style={styles.heading}>Categories</Text>
       <Carousel
         data={categories}
@@ -98,6 +140,52 @@ const styles = StyleSheet.create({
   overviewContainer: {
     flex: 1,
     marginTop: -450,
+  },
+  input: {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: "gray",
+    padding: 15,
+    margin: 10,
+    borderRadius: 10,
+    color: "gainsboro",
+  },
+  searchContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignContent: "center",
+    marginHorizontal: SIZES.small,
+    backgroundColor: COLORS.secondary,
+    borderRadius: SIZES.medium,
+    marginVertical: SIZES.medium,
+    height: 50,
+  },
+  searchIcon: {
+    marginHorizontal: 10,
+    color: COLORS.gray,
+    marginTop: SIZES.small,
+  },
+  searchWrapper: {
+    alignItems: "center",
+    justifyContent: "center",
+    flex: 1,
+    backgroundColor: COLORS.secondary,
+    marginRight: SIZES.small,
+    borderRadius: SIZES.small,
+  },
+  searchInput: {
+    fontFamily: "regular",
+    width: "100%",
+    height: "100%",
+    paddingHorizontal: SIZES.small,
+  },
+  searchBtn: {
+    width: 40,
+    height: "100%",
+    borderRadius: SIZES.medium,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: COLORS.primary,
   },
 });
 
