@@ -33,7 +33,7 @@ const Carousel = () => {
         <View style={styles.header}>
           <Text style={styles.headerTitle}>New Furniture</Text>
           <TouchableOpacity onPress={() => navigation.navigate("NewFurniture")}>
-            <Ionicons name="grid-outline" size={24} color={COLORS.primary} />
+            <Ionicons name="grid-outline" size={40} color={COLORS.primary} />
           </TouchableOpacity>
         </View>
       </View>
@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   container: {
-    marginTop: SIZES.medium,
+    marginTop: SIZES.large,
     marginHorizontal: 12,
   },
   header: {

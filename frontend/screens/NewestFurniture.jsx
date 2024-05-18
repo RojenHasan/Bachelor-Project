@@ -13,41 +13,43 @@ import { Ionicons } from "@expo/vector-icons";
 import { supabase } from "../src/lib/supabase";
 import { COLORS, SIZES } from "../constants";
 import { StatusBar } from "expo-status-bar";
-const NewFurniture = () => {
-  const [furnitures, setFurniture] = useState([]);
+const NewestFurniture = () => {
+  const [furniture, setFurniture] = useState([]);
   const navigation = useNavigation();
 
   useEffect(() => {
-    const fetchFurnitures = async () => {
-      let { data: furnitures, error } = await supabase
+    const fetchFurniture = async () => {
+      let { data: furniture, error } = await supabase
         .from("furniture")
         .select("*")
         .order("created_at", { ascending: false })
-        .limit(15);
+        .limit(1)
+        .single();
 
       console.log(error);
       //console.log(furnitures);
-      if (furnitures) {
-        setFurniture(furnitures);
+      if (furniture) {
+        setFurniture(furniture);
       }
     };
-    fetchFurnitures();
+    fetchFurniture();
   }, []);
   const navigateToDetails = (item) => {
     navigation.navigate("FurnitureDetails", { item });
   };
-  const renderSimilarSofaItem = ({ item }) => (
-    <TouchableOpacity onPress={() => navigateToDetails(item)}>
+
+  return (
+    <TouchableOpacity onPress={() => navigateToDetails(furniture)}>
       <View style={styles.similarItemContainer}>
         <Image
-          source={{ uri: item.photo_url }}
+          source={{ uri: furniture.photo_url }}
           style={styles.similarItemImage}
         />
         <View style={styles.similarItemDetails}>
           <Text style={styles.similarItemTitle} numberOfLines={1}>
-            {item.name}
+            {furniture.name}
           </Text>
-          <Text style={styles.similarItemPrice}>$ {item.price}</Text>
+          <Text style={styles.similarItemPrice}>$ {furniture.price}</Text>
         </View>
         <TouchableOpacity style={styles.similarItemIcon}>
           <Ionicons
@@ -59,21 +61,9 @@ const NewFurniture = () => {
       </View>
     </TouchableOpacity>
   );
-  return (
-    <View>
-      <SafeAreaView>
-        <View style={styles.header}>
-          <Text style={styles.Txt(COLORS.black, 30)}>New furniture</Text>
-        </View>
-        <FlatList data={furnitures} renderItem={renderSimilarSofaItem} />
-      </SafeAreaView>
-      <StatusBar style="auto" />
-      <View style={{ marginVertical: 100 }} />
-    </View>
-  );
 };
 
-export default NewFurniture;
+export default NewestFurniture;
 
 const styles = StyleSheet.create({
   header: {

@@ -14,6 +14,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import ChatBot from "./ChatBot";
 import NewFurniture from "./NewFurniture";
+import NewestFurniture from "./NewestFurniture";
 
 const Home = () => {
   const navigation = useNavigation();
@@ -91,6 +92,8 @@ const Home = () => {
         <ScrollView>
           <Welcome />
           <Carousel />
+          <NewestFurniture/> 
+
           <View style={{ marginVertical: 10 }} />
           <TouchableOpacity onPress={handleChatBotPress}>
             <View
