@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { TouchableOpacity, View, Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import styles from "./home.style";
+import { StyleSheet } from "react-native";
+import { COLORS, SIZES } from "../constants";
 import { Ionicons, Fontisto } from "@expo/vector-icons";
 import {
   ScrollView,
@@ -9,7 +10,6 @@ import {
 } from "react-native-gesture-handler";
 import { Welcome } from "../components";
 import Carousel from "../components/home/Carousel";
-import Headings from "../components/home/Headings";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import ChatBot from "./ChatBot";
@@ -87,11 +87,10 @@ const Home = () => {
             </View>
           </View>
         </View>
-        
+
         <ScrollView>
           <Welcome />
           <Carousel />
-          <Headings />
           <View style={{ marginVertical: 10 }} />
           <TouchableOpacity onPress={handleChatBotPress}>
             <View
@@ -112,3 +111,40 @@ const Home = () => {
 };
 
 export default Home;
+const styles = StyleSheet.create({
+  textStyle: {
+    fontFamily: "bold",
+    fontSize: 40,
+  },
+  appBarWrapper: {
+    marginHorizontal: 22,
+    marginTop: SIZES.small,
+  },
+  appBar: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  location: {
+    fontFamily: "semibold",
+    fontSize: SIZES.medium,
+    color: COLORS.gray,
+  },
+  cartCount: {
+    position: "absolute",
+    bottom: 16,
+    width: 16,
+    height: 16,
+    borderRadius: 8,
+    alignItems: "center",
+    backgroundColor: "green",
+    justifyContent: "center",
+    zIndex: 999,
+  },
+  cartNumber: {
+    fontFamily: "regular",
+    fontWeight: "600",
+    fontSize: 10,
+    color: COLORS.lightWhite,
+  },
+});

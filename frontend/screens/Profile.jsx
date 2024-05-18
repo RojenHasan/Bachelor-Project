@@ -63,16 +63,38 @@ const Profile = ({ navigation }) => {
       console.error("Error logging out keys:", error);
     }
   };
+  const confirmDeleteUser = async () => {
+    try {
+      const id = await AsyncStorage.getItem("id");
+      console.log("id", id);
+      const response = await fetch(`http://192.168.1.32:3000/api/users/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      console.log(response);
 
+      if (response.ok) {
+        console.log("ok");
+      } else {
+        const errorData = await response.json();
+        Alert.alert("Error", errorData.message || "Failed to delete account");
+      }
+    } catch (error) {
+      console.error("Error deleting user:", error);
+      Alert.alert("Error", "Failed to delete account");
+    }
+  };
   const deleteUser = () => {
     Alert.alert(
       "Delete Account",
       "Are you sure you want to delete your account?",
       [
         { text: "Cancel", onPress: () => console.log("Cancel pressed") },
-        { text: "Yes", onPress: () => console.log("Delete pressed") },
+        { text: "Yes", onPress: () => confirmDeleteUser() },
       ],
-      { defaultIndex: 1 } // Index 1 corresponds to the "Delete" button
+      { defaultIndex: 1 }
     );
   };
 
@@ -209,7 +231,6 @@ const Profile = ({ navigation }) => {
                     <Text style={styles.menuItemText}>Logout</Text>
                   </View>
                 </TouchableOpacity>
-                
               </View>
             )}
           </View>
@@ -225,7 +246,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLORS.lightWhite,
-    marginBottom:SIZES.xxLarge
+    marginBottom: SIZES.xxLarge,
   },
   loginBtn: {
     backgroundColor: COLORS.secondary,

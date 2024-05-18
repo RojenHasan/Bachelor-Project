@@ -6,7 +6,6 @@ import { Ionicons } from "@expo/vector-icons";
 import { COLORS } from "../constants/index";
 import Search from "../screens/Search";
 import Profile from "../screens/Profile";
-import AddItem from "../screens/AddItem";
 import Category from "../screens/Category";
 import AddFurniture from "../screens/AddFurniture";
 

@@ -4,7 +4,6 @@ import {
   StyleSheet,
   TouchableOpacity,
   View,
-  Text,
   Image,
 } from "react-native";
 import { supabase } from "../src/lib/supabase";
@@ -12,15 +11,12 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Feather, Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { SIZES, COLORS } from "../constants/theme";
-import axios from "axios";
 import { FlatList } from "react-native";
-import SearchTile from "../components/products/SearchTile";
+import SearchTile from "../components/SearchTile";
 
 const Search = () => {
   const [furniture, setFurniture] = useState([]);
   const [query, setQuery] = useState("");
-  const [searchKey, setSeachKey] = useState("");
-  const [searchResult, setSearchResult] = useState([]);
   useEffect(() => {
     const fetchFurniture = async () => {
       try {

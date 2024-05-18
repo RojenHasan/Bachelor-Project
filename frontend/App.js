@@ -7,8 +7,6 @@ import { useCallback } from "react";
 import BottomTabNavigation from "./navigation/BottomTabNavigation";
 import {
   Cart,
-  ProductDetails,
-  NewRivals,
   LoginPage,
   Favorites,
   Orders,
@@ -56,11 +54,6 @@ export default function App() {
         <Stack.Screen
           name="Cart"
           component={Cart}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="ProductDetails"
-          component={ProductDetails}
           options={{ headerShown: false }}
         />
         <Stack.Screen
