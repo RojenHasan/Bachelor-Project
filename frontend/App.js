@@ -16,11 +16,12 @@ import {
 } from "./screens";
 import ChatBot from "./screens/ChatBot";
 import SofasOverview from "./screens/SofasOverview";
-import KidsFurnitureOverview from "./screens/KidsFurniture";
-import DiningFurnitureOverview from "./screens/DiningFurniture";
+import KidsOverview from "./screens/KidsOverview";
+import DiningOverview from "./screens/DiningOverview";
 import BedsOverview from "./screens/BedsOverview";
 import FurnitureCategory from "./screens/FurnitureCategory";
-import SofaDetails from "./screens/SofaDetails";
+import FurnitureDetails from "./screens/FurnitureDetails";
+import OutdoorsOverview from "./screens/OutdoorOverview";
 
 const Stack = createNativeStackNavigator();
 export default function App() {
@@ -97,23 +98,28 @@ export default function App() {
           options={{ headerShown: false }}
         />
         <Stack.Screen
+          name="FurnitureDetails"
+          component={FurnitureDetails}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
           name="SofasOverview"
           component={SofasOverview}
           options={{ headerShown: false }}
         />
         <Stack.Screen
-          name="SofaDetails"
-          component={SofaDetails}
+          name="KidsOverview"
+          component={KidsOverview}
           options={{ headerShown: false }}
         />
         <Stack.Screen
-          name="KidsFurnitureOverview"
-          component={KidsFurnitureOverview}
+          name="DiningOverview"
+          component={DiningOverview}
           options={{ headerShown: false }}
         />
         <Stack.Screen
-          name="DiningFurnitureOverview"
-          component={DiningFurnitureOverview}
+          name="outdoorOverview"
+          component={OutdoorsOverview}
           options={{ headerShown: false }}
         />
         <Stack.Screen

@@ -21,15 +21,17 @@ const sofa = require("../assets/images/products/sofa.jpg");
 const kids = require("../assets/images/products/kids.jpg");
 const dinnig = require("../assets/images/products/dinning.jpg");
 const beds = require("../assets/images/products/beds.jpg");
+const outdoor = require("../assets/images/products/outdoor.jpg");
 
 const FurnitureCategory = ({ navigation }) => {
   const [furniture, setFurniture] = useState([]);
   const [query, setQuery] = useState("");
   const categories = [
     { name: "Sofas", photo: sofa },
-    { name: "Kids Furniture", photo: kids },
-    { name: "Dining Furniture", photo: dinnig },
+    { name: "Kids", photo: kids },
+    { name: "Dining", photo: dinnig },
     { name: "Beds", photo: beds },
+    { name: "outdoor", photo: outdoor },
   ];
   useEffect(() => {
     const fetchFurniture = async () => {
@@ -71,6 +73,8 @@ const FurnitureCategory = ({ navigation }) => {
   };
   return (
     <View style={styles.container}>
+      <View style={{ marginVertical: 12 }} />
+
       <View style={styles.searchContainer}>
         <TouchableOpacity>
           <Feather name="search" size={24} style={styles.searchIcon}></Feather>
@@ -119,7 +123,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     backgroundColor: COLORS.gray2,
     borderRadius: 10,
-    padding: 10,
+    padding: 5,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
@@ -127,8 +131,8 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   image: {
-    width: 100,
-    height: 100,
+    width: 200,
+    height: 120,
     marginBottom: 10,
     borderRadius: 10,
   },

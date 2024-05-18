@@ -14,30 +14,30 @@ import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import { COLORS } from "../constants";
 
-const SofasOverview = () => {
-  const [sofas, setSofas] = useState([]);
+const DiningOverview = () => {
+  const [dinings, setDinings] = useState([]);
   const navigation = useNavigation();
 
   useEffect(() => {
-    const fetchSofas = async () => {
-      let { data: sofas, error } = await supabase
+    const fetchDinings = async () => {
+      let { data: dinings, error } = await supabase
         .from("furniture")
         .select("*")
-        .ilike("type", "%Sofa%", { raw: true });
+        .ilike("type", "%Kitchen%", { raw: true });
 
       console.log(error);
-      //console.log(sofas);
-      if (sofas) {
-        setSofas(sofas);
+      //console.log(dinings);
+      if (dinings) {
+        setDinings(dinings);
       }
     };
-    fetchSofas();
+    fetchDinings();
   }, []);
 
   const goToFurnitureDetails = (item) => {
     navigation.navigate("FurnitureDetails", { item });
   };
-  const renderSofaItem = ({ item }) => (
+  const renderDiningItem = ({ item }) => (
     <TouchableOpacity onPress={() => goToFurnitureDetails(item)}>
       <View style={styles.container}>
         <View style={styles.imageContainer}>
@@ -71,8 +71,8 @@ const SofasOverview = () => {
     <View>
       <SafeAreaView>
         <FlatList
-          data={sofas}
-          renderItem={renderSofaItem}
+          data={dinings}
+          renderItem={renderDiningItem}
           keyExtractor={(item) => item.id.toString()}
         />
       </SafeAreaView>
@@ -81,7 +81,7 @@ const SofasOverview = () => {
   );
 };
 
-export default SofasOverview;
+export default DiningOverview;
 
 const styles = StyleSheet.create({
   container: {

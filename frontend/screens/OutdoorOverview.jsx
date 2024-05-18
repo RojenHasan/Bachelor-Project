@@ -14,30 +14,30 @@ import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import { COLORS } from "../constants";
 
-const SofasOverview = () => {
-  const [sofas, setSofas] = useState([]);
+const OutdoorsOverview = () => {
+  const [outdoor, setOutdoor] = useState([]);
   const navigation = useNavigation();
 
   useEffect(() => {
-    const fetchSofas = async () => {
-      let { data: sofas, error } = await supabase
+    const fetchOutdoor = async () => {
+      let { data: outdoor, error } = await supabase
         .from("furniture")
         .select("*")
-        .ilike("type", "%Sofa%", { raw: true });
+        .ilike("type", "%outdoor%", { raw: true });
 
       console.log(error);
-      //console.log(sofas);
-      if (sofas) {
-        setSofas(sofas);
+      //console.log(outdoor);
+      if (outdoor) {
+        setOutdoor(outdoor);
       }
     };
-    fetchSofas();
+    fetchOutdoor();
   }, []);
 
   const goToFurnitureDetails = (item) => {
     navigation.navigate("FurnitureDetails", { item });
   };
-  const renderSofaItem = ({ item }) => (
+  const renderOutdoorItem = ({ item }) => (
     <TouchableOpacity onPress={() => goToFurnitureDetails(item)}>
       <View style={styles.container}>
         <View style={styles.imageContainer}>
@@ -71,8 +71,8 @@ const SofasOverview = () => {
     <View>
       <SafeAreaView>
         <FlatList
-          data={sofas}
-          renderItem={renderSofaItem}
+          data={outdoor}
+          renderItem={renderOutdoorItem}
           keyExtractor={(item) => item.id.toString()}
         />
       </SafeAreaView>
@@ -81,7 +81,7 @@ const SofasOverview = () => {
   );
 };
 
-export default SofasOverview;
+export default OutdoorsOverview;
 
 const styles = StyleSheet.create({
   container: {

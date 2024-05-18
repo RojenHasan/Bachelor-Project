@@ -15,7 +15,7 @@ import { supabase } from "../src/lib/supabase";
 import SofasOverview from "./SofasOverview";
 import { renderSofaItem } from "./SofasOverview";
 
-const SofaDetails = ({ navigation }) => {
+const FurnitureDetails = ({ navigation }) => {
   const route = useRoute();
   const { item } = route.params;
   const [sofa, setSofa] = useState(null);
@@ -59,7 +59,7 @@ const SofaDetails = ({ navigation }) => {
 
   const renderSimilarSofaItem = ({ item }) => (
     <TouchableOpacity
-      onPress={() => navigation.navigate("SofaDetails", { item })}
+      onPress={() => navigation.navigate("FurnitureDetails", { item })}
     >
       <View style={styles.similarItemContainer}>
         <Image
@@ -124,7 +124,7 @@ const SofaDetails = ({ navigation }) => {
   );
 };
 
-export default SofaDetails;
+export default FurnitureDetails;
 
 const styles = StyleSheet.create({
   container: {

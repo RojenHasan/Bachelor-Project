@@ -32,23 +32,7 @@ const FurnitureOverview = () => {
     fetchFurnitures();
   }, []);
   const navigateToDetails = (item) => {
-    switch (item.type) {
-      case " Sofa":
-        navigation.navigate("SofaDetails", { item });
-        break;
-      case " Kids":
-        navigation.navigate("KidsDetails", { item });
-        break;
-      case " Kitchen":
-        navigation.navigate("KitchenDetails", { item });
-        break;
-      case " Bed":
-        navigation.navigate("BedDetails", { item });
-        break;
-      default:
-        console.log("No navigation route specified for:", item.type);
-        break;
-    }
+    navigation.navigate("FurnitureDetails", { item });
   };
   const renderSimilarSofaItem = ({ item }) => (
     <TouchableOpacity onPress={() => navigateToDetails(item)}>

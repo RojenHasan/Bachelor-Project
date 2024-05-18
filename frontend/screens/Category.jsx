@@ -2,16 +2,12 @@ import React from "react";
 import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
 
 const furniture = require("../assets/images/products/furniture.jpg");
-const book = require("../assets/images/products/book.jpg");
-const cd = require("../assets/images/products/cd.jpg");
 const car = require("../assets/images/products/car.jpg");
 const house = require("../assets/images/products/house.jpg");
 
 const Category = ({ navigation }) => {
   const categories = [
     { name: "Furniture", photo: furniture },
-    { name: "Books", photo: book },
-    { name: "Movies", photo: cd },
     { name: "Houses", photo: house },
     { name: "Cars", photo: car },
   ];
