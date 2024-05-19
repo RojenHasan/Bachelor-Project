@@ -9,25 +9,35 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
-import { Ionicons } from "@expo/vector-icons"; // Assuming you're using Ionicons for icons
+import { Ionicons } from "@expo/vector-icons";
+import { supabase } from "../src/lib/supabase";
+import SearchTile from "../components/SearchTile";
 
 const ChatBot = () => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [awaitingUserResponse, setAwaitingUserResponse] = useState(false);
+  const [matchedProducts, setMatchedProducts] = useState([]);
   const scrollViewRef = useRef(null);
 
-  const handleSendMessage = () => {
+  useEffect(() => {
+    sendDefaultMessage();
+  }, []);
+
+  const sendDefaultMessage = () => {
+    const defaultMessage =
+      "Hello! How can I assist you today? You can ask about our opening hours, address, or products.";
+    setMessages([{ text: defaultMessage, sender: "bot" }]);
+  };
+
+  const handleSendMessage = async () => {
     if (input.trim() === "") return;
 
     const newMessages = [...messages, { text: input, sender: "user" }];
     setMessages(newMessages);
     setInput("");
 
-    // Keywords to check
-    const keywords = ["opening", "address"];
-
-    // Check if input contains any of the keywords
+    const keywords = ["opening", "address", "product"];
     const containsKeyword = keywords.some((keyword) =>
       input.toLowerCase().includes(keyword)
     );
@@ -39,16 +49,64 @@ const ChatBot = () => {
       } else if (input.toLowerCase().includes("address")) {
         responseMessage =
           "We do not have a physical address, we only exist online.";
+      } else if (input.toLowerCase().includes("product")) {
+        const products = await fetchMatchingProducts(input);
+        setMatchedProducts(products);
+
+        if (products.length > 0) {
+          responseMessage = "Here are some products that you may like:";
+        } else {
+          responseMessage = "No products found.";
+        }
       }
 
       setMessages([...newMessages, { text: responseMessage, sender: "bot" }]);
     } else {
-      // Handle other types of messages as needed
-      // For example, prompt user for further assistance options
       const helpOptionsMessage =
         "I'm sorry, I can't assist with that. How can I help you?";
-      setMessages([...newMessages, { text: helpOptionsMessage, sender: "bot" }]);
+      setMessages([
+        ...newMessages,
+        { text: helpOptionsMessage, sender: "bot" },
+      ]);
       setAwaitingUserResponse(true);
+    }
+  };
+
+  const fetchMatchingProducts = async (query) => {
+    try {
+      const { data: embedData, error: embedError } =
+        await supabase.functions.invoke("embed", {
+          body: { input: query },
+        });
+
+      if (embedError) {
+        console.error("Error invoking embed function:", embedError.message);
+        return [];
+      }
+
+      if (!embedData || !embedData.embedding) {
+        console.error("Invalid embedding data received:", embedData);
+        return [];
+      }
+
+      const { data: furnitureData, error: matchError } = await supabase.rpc(
+        "match_furniture",
+        {
+          query_embedding: embedData.embedding,
+          match_threshold: 0.78,
+          match_count: 3,
+        }
+      );
+
+      if (matchError) {
+        console.error("Error fetching matching products:", matchError.message);
+        return [];
+      }
+
+      return furnitureData;
+    } catch (error) {
+      console.error("Error in fetchMatchingProducts:", error.message);
+      return [];
     }
   };
 
@@ -74,7 +132,6 @@ const ChatBot = () => {
     setMessages(newMessages);
     setAwaitingUserResponse(false);
 
-    // Scroll to the bottom when new message is added
     scrollToBottom();
   };
 
@@ -85,7 +142,6 @@ const ChatBot = () => {
   };
 
   useEffect(() => {
-    // Initially scroll to the bottom
     scrollToBottom();
   }, [messages]);
 
@@ -111,6 +167,13 @@ const ChatBot = () => {
             <Text style={styles.messageText}>{message.text}</Text>
           </View>
         ))}
+        {matchedProducts.length > 0 && (
+          <View style={styles.productsContainer}>
+            {matchedProducts.map((product, index) => (
+              <SearchTile key={index} item={product} />
+            ))}
+          </View>
+        )}
         {awaitingUserResponse && (
           <View style={styles.optionsContainer}>
             <TouchableOpacity
@@ -222,6 +285,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
     textAlign: "center",
+  },
+  productsContainer: {
+    marginVertical: 10,
   },
 });
 
