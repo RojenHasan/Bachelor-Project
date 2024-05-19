@@ -23,8 +23,8 @@ const Welcome = () => {
           <TextInput
             style={styles.searchInput}
             value=""
-            onPressIn={() => navigation.navigate("BasicSearch")}
-            placeholder="What are you looking for"
+            onPressIn={() => navigation.navigate("Search")}
+            placeholder="What are you looking for..."
           />
         </View>
       </View>

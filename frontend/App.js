@@ -5,13 +5,7 @@ import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import { useCallback } from "react";
 import BottomTabNavigation from "./navigation/BottomTabNavigation";
-import {
-  Cart,
-  LoginPage,
-  Favorites,
-  Orders,
-  Signup,
-} from "./screens";
+import { Cart, LoginPage, Favorites, Orders, Signup, Profile } from "./screens";
 import ChatBot from "./screens/ChatBot";
 import SofasOverview from "./screens/SofasOverview";
 import KidsOverview from "./screens/KidsOverview";
@@ -122,7 +116,7 @@ export default function App() {
           component={BedsOverview}
           options={{ headerShown: false }}
         />
-         <Stack.Screen
+        <Stack.Screen
           name="Contact"
           component={Contact}
           options={{ headerShown: false }}

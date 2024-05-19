@@ -50,32 +50,7 @@ const LoginPage = ({ navigation }) => {
     }
   };
 
-  // const login = async () => {
-  //   setLoader(true);
-  //   try {
-  //     const endpoint = "http://192.168.1.34:3000/api/login";
-  //     const data = inputs;
-  //     console.log(data);
 
-  //     const response = await axios.post(endpoint, data);
-  //     setResponseData(response.data);
-  //     console.log(responseData);
-
-  //     // try {
-  //     //   setLoader(false);
-  //     //   await AsyncStorage.setItem(
-  //     //     `user${responseData._id}`,
-  //     //     JSON.stringify(responseData)
-  //     //   );
-  //     //   await AsyncStorage.setItem("id", JSON.stringify(responseData._id));
-  //     //   navigation.replace("Bottom Navigation");
-  //     // }
-  //   } catch (error) {
-  //     Alert.alert("Error", "Oops, something went wrong. Try again");
-  //   } finally {
-  //     setLoader(false);
-  //   }
-  // };
   const login = async () => {
     setLoader(true);
     try {
@@ -123,15 +98,15 @@ const LoginPage = ({ navigation }) => {
   }, [responseData]);
   return (
     <ScrollView>
-      <SafeAreaView style={{ marginHorizontal: 20 }}>
-        <View>
+      <SafeAreaView style={{ marginHorizontal: 20, marginBottom: 30, marginVertical: 20}}>
+        <View >
           <BackButton onPress={() => navigation.goBack()} />
 
           <Image
             source={require("../assets/images/bk.png")}
             style={styles.img}
           />
-          {/* WELCOME TEXT */}
+
 
           <Text style={styles.motto}>PIVOT </Text>
 

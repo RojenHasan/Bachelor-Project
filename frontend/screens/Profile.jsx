@@ -92,7 +92,7 @@ const Profile = ({ navigation }) => {
       "Are you sure you want to delete your account?",
       [
         { text: "Cancel", onPress: () => console.log("Cancel pressed") },
-        { text: "Yes", onPress: () => confirmDeleteUser() },
+        { text: "Yes", onPress: () => console.log("Deleted") },
       ],
       { defaultIndex: 1 }
     );
@@ -181,27 +181,6 @@ const Profile = ({ navigation }) => {
                   </View>
                 </TouchableOpacity>
 
-                <TouchableOpacity onPress={() => navigation.navigate("Orders")}>
-                  <View style={styles.menuItem(0.5)}>
-                    <MaterialCommunityIcons
-                      name="truck-delivery-outline"
-                      size={24}
-                      color={COLORS.primary}
-                    />
-                    <Text style={styles.menuItemText}>Orders</Text>
-                  </View>
-                </TouchableOpacity>
-
-                <TouchableOpacity onPress={() => navigation.navigate("Cart")}>
-                  <View style={styles.menuItem(0.5)}>
-                    <SimpleLineIcons
-                      name="bag"
-                      size={24}
-                      color={COLORS.primary}
-                    />
-                    <Text style={styles.menuItemText}>Cart</Text>
-                  </View>
-                </TouchableOpacity>
 
                 <TouchableOpacity onPress={clearCache}>
                   <View style={styles.menuItem(0.5)}>
@@ -303,5 +282,6 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     fontSize: 14,
     lineHeight: 26,
+    marginRight: 20,
   },
 });

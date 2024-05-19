@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   View,
   Text,
@@ -30,7 +31,29 @@ const AddFurniture = () => {
 
   const [validationError, setValidationError] = useState("");
   const navigation = useNavigation();
+  const [userData, setUserData] = useState(null);
+  const [userLoggedIn, setUserLoggedIn] = useState(false);
 
+  useEffect(() => {
+    checkUserExistence();
+  }, []);
+
+  const checkUserExistence = async () => {
+    const id = await AsyncStorage.getItem("id");
+    const userID = `user${JSON.parse(id)}`;
+    try {
+      const userData = await AsyncStorage.getItem(userID);
+      if (userData !== null) {
+        const parsedData = JSON.parse(userData);
+        setUserLoggedIn(true);
+        setUserData(parsedData);
+
+        setEmail(parsedData.email);
+      }
+    } catch (error) {
+      console.error("Error retrieving user data:", error);
+    }
+  };
   const openImageLibrary = async () => {
     console.log("openImageLibrary function called");
     try {
