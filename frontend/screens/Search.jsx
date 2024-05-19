@@ -40,38 +40,26 @@ const Search = () => {
     fetchFurniture();
   }, []);
   const onPress = async () => {
-    console.log("kkk", furniture);
-
     const { data } = await supabase.functions.invoke("embed", {
       body: { input: query },
     });
-    console.log("kkk", furniture);
 
     const { data: furniture } = await supabase.rpc("match_furniture", {
       query_embedding: data.embedding,
-      match_threshold: 0.78,
+      match_threshold: 0.6,
       match_count: 20,
     });
     setFurniture(furniture);
-    console.log("kkk", furniture);
     setQuery("");
   };
   return (
     <SafeAreaView>
       <View style={styles.searchContainer}>
-        <TouchableOpacity>
-          <Ionicons
-            name="camera-outline"
-            size={SIZES.xLarge}
-            style={styles.searchIcon}
-          />
-        </TouchableOpacity>
-
         <View style={styles.searchWrapper}>
           <TextInput
             placeholder="AI: What are you looking for.."
             placeholderTextColor={"gray"}
-            style={styles.input}
+            style={styles.searchInput}
             value={query}
             onChangeText={setQuery}
           />
@@ -92,7 +80,7 @@ const Search = () => {
       ) : (
         <FlatList
           data={furniture}
-          keyExtractor={(item) => item._id}
+          keyExtractor={(item) => item.id}
           renderItem={({ item }) => <SearchTile item={item} />}
           style={{ marginHorizontal: 12 }}
         />
@@ -125,6 +113,7 @@ const styles = StyleSheet.create({
     marginRight: SIZES.small,
     borderRadius: SIZES.small,
   },
+
   searchInput: {
     fontFamily: "regular",
     width: "100%",

@@ -8,6 +8,7 @@ const SearchTile = ({ item }) => {
   return (
     <View>
       <TouchableOpacity
+        key={item.id}
         style={styles.container}
         onPress={() => navigation.navigate("FurnitureDetails", { item })}
       >

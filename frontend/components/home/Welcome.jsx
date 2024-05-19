@@ -23,18 +23,12 @@ const Welcome = () => {
           <TextInput
             style={styles.searchInput}
             value=""
-            onPressIn={() => navigation.navigate("Search")}
+            onPressIn={() => navigation.navigate("BasicSearch")}
             placeholder="What are you looking for"
           />
         </View>
-        <View>
-          <TouchableOpacity style={styles.searchBtn}>
-            <Ionicons name="camera-outline" size={20} color={COLORS.white} />
-          </TouchableOpacity>
-        </View>
       </View>
     </View>
-    
   );
 };
 

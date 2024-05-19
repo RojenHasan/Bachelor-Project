@@ -85,7 +85,7 @@ const FurnitureCategory = ({ navigation }) => {
             style={styles.searchInput}
             value=""
             onPressIn={() => navigation.navigate("Search")}
-            placeholder="What are you looking for"
+            placeholder="AI What are you looking for"
           />
         </View>
       </View>
@@ -93,13 +93,13 @@ const FurnitureCategory = ({ navigation }) => {
       <Carousel
         data={categories}
         renderItem={renderCarouselItem}
-        sliderWidth={300} // Adjust as per your design
-        itemWidth={250} // Adjust as per your design
+        sliderWidth={300}
+        itemWidth={250}
         loop={true}
         layout="default"
       />
       <View style={styles.overviewContainer}>
-        <Text style={styles.heading}>Overview</Text>
+        <Text style={styles.heading}></Text>
         <FurnitureOverview />
       </View>
     </View>
