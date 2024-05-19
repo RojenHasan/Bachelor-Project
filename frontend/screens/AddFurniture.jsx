@@ -24,8 +24,10 @@ const AddFurniture = () => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
-  const [photoUrl, setPhotoUrl] = useState("");
+  const [photo_url, setPhoto_url] = useState("");
   const [type, setType] = useState("");
+  const [email, setEmail] = useState("");
+
   const [validationError, setValidationError] = useState("");
   const navigation = useNavigation();
 
@@ -49,9 +51,9 @@ const AddFurniture = () => {
       console.log("ImagePicker Result:", result);
 
       if (!result.cancelled) {
-        const selectedImageUrl = result.uri; // Store the URI in a variable
+        const selectedImageUrl = result.assets[0].uri;
         console.log("Selected image URI:", selectedImageUrl);
-        setPhotoUrl(selectedImageUrl); // Update photoUrl state with the selected image URI
+        setPhoto_url(selectedImageUrl); // Update photoUrl state with the selected image URI
         console.log("photoUrl after setting:", selectedImageUrl); // Log the updated photoUrl
       } else {
         console.log("Image selection canceled");
@@ -62,7 +64,7 @@ const AddFurniture = () => {
     }
   };
   const validateForm = () => {
-    if (!name || !description || !price || !type) {
+    if (!name || !description || !price || !type || !email) {
       setValidationError("All fields are required");
       return false;
     }
@@ -80,8 +82,9 @@ const AddFurniture = () => {
         name: name,
         description: description,
         price: price,
-        photo_url: photoUrl,
+        photo_url: photo_url,
         type: type,
+        email: email,
       })
       .select();
 
@@ -94,8 +97,9 @@ const AddFurniture = () => {
       setName("");
       setDescription("");
       setPrice("");
-      setPhotoUrl("");
+      setPhoto_url("");
       setType("");
+      setEmail("");
       navigation.goBack();
     }
   };
@@ -111,6 +115,15 @@ const AddFurniture = () => {
               style={styles.img}
             />
             <Text style={styles.motto}>Add a Product</Text>
+            <View style={styles.inputContainer}>
+              <Text style={styles.label}>Your email:</Text>
+              <TextInput
+                style={styles.input}
+                value={email}
+                onChangeText={setEmail}
+                placeholder="Enter your email"
+              />
+            </View>
             <View style={styles.inputContainer}>
               <Text style={styles.label}>Name:</Text>
               <TextInput
@@ -145,9 +158,9 @@ const AddFurniture = () => {
                 <Text style={styles.chooseImageText}>Choose Image</Text>
               </View>
             </TouchableOpacity>
-            {photoUrl ? (
+            {photo_url ? (
               <Image
-                source={{ uri: photoUrl }}
+                source={{ uri: photo_url }}
                 style={{ width: 200, height: 200 }}
               />
             ) : (
