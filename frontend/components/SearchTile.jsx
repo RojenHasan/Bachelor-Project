@@ -17,7 +17,7 @@ const SearchTile = ({ item }) => {
         </View>
         <View style={styles.textContainer}>
           <Text style={styles.productTitle}> {item.name}</Text>
-          <Text style={styles.supplier}> {item.price}</Text>
+          <Text style={styles.supplier}> $ {item.price}</Text>
           <Text style={styles.supplier}> {item.type}</Text>
         </View>
       </TouchableOpacity>

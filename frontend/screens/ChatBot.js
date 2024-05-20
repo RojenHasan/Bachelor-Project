@@ -86,6 +86,7 @@ const ChatBot = () => {
 
       if (!embedData || !embedData.embedding) {
         console.error("Invalid embedding data received:", embedData);
+        console.error("Embed Error details:", embedError);
         return [];
       }
 

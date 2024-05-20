@@ -25,7 +25,6 @@ const outdoor = require("../assets/images/products/outdoor.jpg");
 
 const FurnitureCategory = ({ navigation }) => {
   const [furniture, setFurniture] = useState([]);
-  const [query, setQuery] = useState("");
   const categories = [
     { name: "Sofas", photo: sofa },
     { name: "Kids", photo: kids },

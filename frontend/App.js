@@ -16,6 +16,7 @@ import FurnitureDetails from "./screens/FurnitureDetails";
 import OutdoorsOverview from "./screens/OutdoorOverview";
 import NewFurniture from "./screens/NewFurniture";
 import Contact from "./screens/Contact";
+import BasicSearch from "./screens/BasicSeacrh";
 
 const Stack = createNativeStackNavigator();
 export default function App() {
@@ -119,6 +120,11 @@ export default function App() {
         <Stack.Screen
           name="Contact"
           component={Contact}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="BasicSearch"
+          component={BasicSearch}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>
