@@ -24,7 +24,7 @@ app.use(express.urlencoded({ limit: "10mb", extended: true }));
 
 app.use(
   cors({
-    origin: "exp://192.168.1.32:8081", // Update with your frontend URL
+    origin: "exp://192.168.1.32:8082", // Update with your frontend URL
     methods: ["GET", "POST", "PUT", "DELETE"], // Specify allowed HTTP methods
     allowedHeaders: ["Content-Type", "Authorization"], // Specify allowed headers
   })

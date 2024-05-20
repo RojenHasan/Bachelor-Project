@@ -20,6 +20,7 @@ import * as ImagePicker from "expo-image-picker";
 import BackButton from "../components/auth/BackButton";
 import SharedButton from "../components/auth/Button";
 import { Ionicons } from "@expo/vector-icons";
+import axios from "axios";
 
 const AddFurniture = () => {
   const [name, setName] = useState("");
@@ -34,6 +35,9 @@ const AddFurniture = () => {
   const [userData, setUserData] = useState(null);
   const [userLoggedIn, setUserLoggedIn] = useState(false);
 
+  const CLOUDINARY_CLOUD_NAME = "di5aci5xb";
+  const CLOUDINARY_API_KEY = "547856411329329";
+  const CLOUDINARY_API_SECRET = "OCuRfCRwFGUR9SOduNQIR-cl9eU";
   useEffect(() => {
     checkUserExistence();
   }, []);
@@ -96,34 +100,62 @@ const AddFurniture = () => {
   const handleAddFurniture = async () => {
     if (!validateForm()) {
       Alert.alert("Failed to add Furniture", "All fields are required");
-
       return;
     }
-    const { data, error } = await supabase
-      .from("furniture")
-      .insert({
-        name: name,
-        description: description,
-        price: price,
-        photo_url: photo_url,
-        type: type,
-        email: email,
-      })
-      .select();
 
-    if (error) {
-      console.log("Insert Error:", error);
-      Alert.alert("Error", error.message);
-    } else {
-      console.log("Insert Success:", data);
-      Alert.alert("Success", "Furniture added successfully");
-      setName("");
-      setDescription("");
-      setPrice("");
-      setPhoto_url("");
-      setType("");
-      setEmail("");
-      navigation.goBack();
+    try {
+      // Upload image to Cloudinary
+      const formData = new FormData();
+      formData.append("file", {
+        uri: photo_url,
+        type: "image/jpeg",
+        name: `${name}_image.jpg`,
+      });
+      formData.append("upload_preset", "furnitureApp");
+      formData.append("cloud_name", "di5aci5xb");
+
+      const response = await fetch(
+        "https://api.cloudinary.com/v1_1/di5aci5xb/image/upload",
+        {
+          method: "post",
+          body: formData,
+        }
+      );
+      const responseData = await response.json();
+      console.log("Image uploaded to Cloudinary:", responseData.secure_url);
+
+      const { secure_url } = responseData;
+
+      // Insert furniture details into Supabase
+      const { data, error } = await supabase
+        .from("furniture")
+        .insert({
+          name: name,
+          description: description,
+          price: price,
+          photo_url: secure_url,
+          type: type,
+          email: email,
+        })
+        .select();
+
+      if (error) {
+        console.log("Insert Error:", error);
+        Alert.alert("Error", error.message);
+      } else {
+        console.log("Insert Success:", data);
+        Alert.alert("Success", "Furniture added successfully");
+        setName("");
+        setDescription("");
+        setPrice("");
+        setPhoto_url("");
+        setType("");
+        setEmail("");
+        navigation.goBack();
+      }
+    } catch (error) {
+      console.error("Error uploading image to Cloudinary:", error);
+      alert("Error uploading image to Cloudinary. Please try again.");
     }
   };
 
