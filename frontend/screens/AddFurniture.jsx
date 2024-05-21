@@ -21,23 +21,22 @@ import BackButton from "../components/auth/BackButton";
 import SharedButton from "../components/auth/Button";
 import { Ionicons } from "@expo/vector-icons";
 import axios from "axios";
+import { useTranslation } from "react-i18next";
 
 const AddFurniture = () => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
   const [photo_url, setPhoto_url] = useState("");
-  const [type, setType] = useState("");
+  const [type, setType] = useState("Bed");
   const [email, setEmail] = useState("");
+  const { t, i18n } = useTranslation();
 
   const [validationError, setValidationError] = useState("");
   const navigation = useNavigation();
   const [userData, setUserData] = useState(null);
   const [userLoggedIn, setUserLoggedIn] = useState(false);
 
-  const CLOUDINARY_CLOUD_NAME = "di5aci5xb";
-  const CLOUDINARY_API_KEY = "547856411329329";
-  const CLOUDINARY_API_SECRET = "OCuRfCRwFGUR9SOduNQIR-cl9eU";
   useEffect(() => {
     checkUserExistence();
   }, []);
@@ -80,8 +79,8 @@ const AddFurniture = () => {
       if (!result.cancelled) {
         const selectedImageUrl = result.assets[0].uri;
         console.log("Selected image URI:", selectedImageUrl);
-        setPhoto_url(selectedImageUrl); 
-        console.log("photoUrl after setting:", selectedImageUrl); 
+        setPhoto_url(selectedImageUrl);
+        console.log("photoUrl after setting:", selectedImageUrl);
       } else {
         console.log("Image selection canceled");
       }
@@ -91,12 +90,13 @@ const AddFurniture = () => {
     }
   };
   const validateForm = () => {
-    if (!name || !description || !price || !type || !email) {
+    if (!name || !description || !price || !type || !email || !photo_url) {
       setValidationError("All fields are required");
       return false;
     }
     return true;
   };
+
   const handleAddFurniture = async () => {
     if (!validateForm()) {
       Alert.alert("Failed to add Furniture", "All fields are required");
@@ -167,48 +167,48 @@ const AddFurniture = () => {
               source={require("../assets/images/bk.png")}
               style={styles.img}
             />
-            <Text style={styles.motto}>Add a Product</Text>
+            <Text style={styles.motto}>{t("add")}</Text>
             <View style={styles.inputContainer}>
-              <Text style={styles.label}>Your email:</Text>
+              <Text style={styles.label}>{t("your-email")}</Text>
               <TextInput
                 style={styles.input}
                 value={email}
                 onChangeText={setEmail}
-                placeholder="Enter your email"
+                placeholder={t("Enter-your-email")}
               />
             </View>
             <View style={styles.inputContainer}>
-              <Text style={styles.label}>Name:</Text>
+              <Text style={styles.label}>{t("Name")}:</Text>
               <TextInput
                 style={styles.input}
                 value={name}
                 onChangeText={setName}
-                placeholder="Enter furniture name"
+                placeholder={t("Enter-furniture-name")}
               />
             </View>
             <View style={styles.inputContainer}>
-              <Text style={styles.label}>Description:</Text>
+              <Text style={styles.label}>{t("Description")}:</Text>
               <TextInput
                 style={styles.input}
                 value={description}
                 onChangeText={setDescription}
-                placeholder="Enter furniture description"
+                placeholder={t("Enter-furniture-description")}
               />
             </View>
             <View style={styles.inputContainer}>
-              <Text style={styles.label}>Price:</Text>
+              <Text style={styles.label}>{t("Price")}:</Text>
               <TextInput
                 style={styles.input}
                 value={price}
                 onChangeText={setPrice}
-                placeholder="Enter furniture price"
+                placeholder={t("Enter-furniture-price")}
                 keyboardType="numeric"
               />
             </View>
             <TouchableOpacity onPress={openImageLibrary}>
               <View style={styles.chooseImageContainer}>
                 <Ionicons name="image-outline" size={34} color="black" />
-                <Text style={styles.chooseImageText}>Choose Image</Text>
+                <Text style={styles.chooseImageText}>{t("Choose-Image")}</Text>
               </View>
             </TouchableOpacity>
             {photo_url ? (
@@ -217,7 +217,7 @@ const AddFurniture = () => {
                 style={{ width: 200, height: 200 }}
               />
             ) : (
-              <Text>No image selected</Text>
+              <Text style={styles.noImageText}>{t("No-image-selected")}</Text>
             )}
 
             <View style={styles.inputContainer}>
@@ -229,17 +229,17 @@ const AddFurniture = () => {
                   style={styles.picker}
                   itemStyle={styles.pickerItem}
                 >
-                  <Picker.Item label="Bed" value="Bed" />
-                  <Picker.Item label="Sofa" value="Sofa" />
-                  <Picker.Item label="Kitchen" value="Kitchen" />
-                  <Picker.Item label="Kids" value="Kids" />
-                  <Picker.Item label="Outdoor" value="Outdoor" />
+                  <Picker.Item label={t("Kids")} value="Kids" />
+                  <Picker.Item label={t("Bed")} value="Bed" />
+                  <Picker.Item label={t("Sofa")} value="Sofa" />
+                  <Picker.Item label={t("Kitchen")} value="Kitchen" />
+                  <Picker.Item label={t("Outdoor")} value="Outdoor" />
                 </Picker>
               </View>
             </View>
             <SharedButton
               style={styles.button}
-              title={"Add Furniture"}
+              title={t("add")}
               onPress={handleAddFurniture}
             />
           </View>
@@ -271,13 +271,13 @@ const styles = StyleSheet.create({
     marginBottom: SIZES.xxLarge,
   },
   chooseImageButton: {
-    flexDirection: "row", 
-    alignItems: "center", 
+    flexDirection: "row",
+    alignItems: "center",
     marginBottom: 20,
   },
   chooseImageContainer: {
     flexDirection: "row",
-    alignItems: "center", 
+    alignItems: "center",
   },
   chooseImageText: {
     marginLeft: 10,
@@ -328,5 +328,9 @@ const styles = StyleSheet.create({
   pickerItem: {
     fontSize: 18,
     color: "black",
+  },
+  noImageText: {
+    marginBottom: 20,
+    marginTop: 10,
   },
 });
