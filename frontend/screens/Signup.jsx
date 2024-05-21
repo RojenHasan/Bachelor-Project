@@ -34,7 +34,6 @@ const Signup = ({ navigation }) => {
     setErrors((prevState) => ({ ...prevState, [input]: errorMessage }));
   };
 
-  // INPUT VALIDATION
   const validate = () => {
     Keyboard.dismiss();
     let valid = true;
@@ -172,7 +171,6 @@ export default Signup;
 
 const styles = StyleSheet.create({
   scroll: {
-    // paddingTop: 30,
     paddingHorizontal: 20,
   },
   inputView: {

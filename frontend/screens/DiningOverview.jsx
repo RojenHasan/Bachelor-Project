@@ -26,7 +26,6 @@ const DiningOverview = () => {
         .ilike("type", "%Kitchen%", { raw: true });
 
       console.log(error);
-      //console.log(dinings);
       if (dinings) {
         setDinings(dinings);
       }

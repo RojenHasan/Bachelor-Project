@@ -26,7 +26,6 @@ const BedsOverview = () => {
         .ilike("type", "%Bed%", { raw: true });
 
       console.log(error);
-      //console.log(beds);
       if (beds) {
         setBeds(beds);
       }

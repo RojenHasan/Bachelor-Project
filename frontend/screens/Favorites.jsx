@@ -43,7 +43,6 @@ const Favorites = ({navigation}) => {
       let favoritesObj = existingItem ? JSON.parse(existingItem) : {};
   
       if (favoritesObj[productId]) {
-        // Key exists, so delete it
         delete favoritesObj[productId];
   
         navigation.goBack();
@@ -75,7 +74,6 @@ const Favorites = ({navigation}) => {
      <FlatList
     data={favoritesData}
     renderItem={({ item }) => (
-      // Render your favorite item here
       <View>
         <TouchableOpacity
         style={styles.favcontainer}

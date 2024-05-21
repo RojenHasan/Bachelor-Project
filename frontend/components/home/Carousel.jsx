@@ -5,12 +5,15 @@ import { COLORS } from "../../constants";
 import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import { SIZES } from "../../constants";
+import { useTranslation } from "react-i18next";
+import "../../src/i18n/i18n.config";
 
 const welcomeImage = require("../../assets/images/friends.png");
 const welcomeImage1 = require("../../assets/images/welcome1.jpg");
 const welcomeImage2 = require("../../assets/images/welcome2.jpg");
 const Carousel = () => {
   const navigation = useNavigation();
+  const { t, i18n } = useTranslation();
 
   const slides = [welcomeImage, welcomeImage1, welcomeImage2];
   return (
@@ -25,13 +28,12 @@ const Carousel = () => {
             width: "92%",
             marginTop: 15,
           }}
-          // autoplay
           circleLoop
         />
       </View>
       <View style={styles.container}>
         <View style={styles.header}>
-          <Text style={styles.headerTitle}>New Furniture</Text>
+          <Text style={styles.headerTitle}>{t("new-furniture")}</Text>
           <TouchableOpacity onPress={() => navigation.navigate("NewFurniture")}>
             <Ionicons name="grid-outline" size={40} color={COLORS.primary} />
           </TouchableOpacity>

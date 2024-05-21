@@ -113,7 +113,6 @@ export default Contact;
 
 const styles = StyleSheet.create({
   scroll: {
-    //paddingTop: 30,
     paddingHorizontal: 20,
     marginBottom: SIZES.xxLarge,
   },

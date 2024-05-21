@@ -30,9 +30,7 @@ const Profile = ({ navigation }) => {
     try {
       const userData = await AsyncStorage.getItem(userID);
       if (userData !== null) {
-        // User data exists
         const parsedData = JSON.parse(userData);
-        // Use the retrieved data as needed
         setUserData(parsedData);
         setUserLogin(true);
       } else {

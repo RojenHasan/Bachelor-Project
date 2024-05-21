@@ -5,8 +5,11 @@ import { COLORS, SIZES } from "../../constants/theme";
 import { Feather, Ionicons } from "@expo/vector-icons";
 import { TextInput } from "react-native-gesture-handler";
 import { useNavigation } from "@react-navigation/native";
+import { useTranslation } from "react-i18next";
+import "../../src/i18n/i18n.config";
 
 const Welcome = () => {
+  const { t, i18n } = useTranslation();
   const navigation = useNavigation();
   return (
     <View>
@@ -24,7 +27,7 @@ const Welcome = () => {
             style={styles.searchInput}
             value=""
             onPressIn={() => navigation.navigate("BasicSearch")}
-            placeholder="What are you looking for..."
+            placeholder={t("search")}
           />
         </View>
       </View>
@@ -52,7 +55,7 @@ const styles = StyleSheet.create({
     marginHorizontal: SIZES.small,
     backgroundColor: COLORS.secondary,
     borderRadius: SIZES.medium,
-    marginVertical: SIZES.medium,
+    marginVertical: SIZES.small,
     height: 50,
   },
   searchIcon: {

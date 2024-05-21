@@ -80,8 +80,8 @@ const AddFurniture = () => {
       if (!result.cancelled) {
         const selectedImageUrl = result.assets[0].uri;
         console.log("Selected image URI:", selectedImageUrl);
-        setPhoto_url(selectedImageUrl); // Update photoUrl state with the selected image URI
-        console.log("photoUrl after setting:", selectedImageUrl); // Log the updated photoUrl
+        setPhoto_url(selectedImageUrl); 
+        console.log("photoUrl after setting:", selectedImageUrl); 
       } else {
         console.log("Image selection canceled");
       }
@@ -104,7 +104,6 @@ const AddFurniture = () => {
     }
 
     try {
-      // Upload image to Cloudinary
       const formData = new FormData();
       formData.append("file", {
         uri: photo_url,
@@ -126,7 +125,6 @@ const AddFurniture = () => {
 
       const { secure_url } = responseData;
 
-      // Insert furniture details into Supabase
       const { data, error } = await supabase
         .from("furniture")
         .insert({
@@ -255,7 +253,6 @@ export default AddFurniture;
 
 const styles = StyleSheet.create({
   scroll: {
-    //paddingTop: 30,
     paddingHorizontal: 20,
     marginBottom: SIZES.xxLarge,
   },
@@ -274,13 +271,13 @@ const styles = StyleSheet.create({
     marginBottom: SIZES.xxLarge,
   },
   chooseImageButton: {
-    flexDirection: "row", // Arrange children horizontally
-    alignItems: "center", // Center items vertically
+    flexDirection: "row", 
+    alignItems: "center", 
     marginBottom: 20,
   },
   chooseImageContainer: {
-    flexDirection: "row", // Arrange children horizontally
-    alignItems: "center", // Center items vertically
+    flexDirection: "row",
+    alignItems: "center", 
   },
   chooseImageText: {
     marginLeft: 10,

@@ -17,7 +17,7 @@ import OutdoorsOverview from "./screens/OutdoorOverview";
 import NewFurniture from "./screens/NewFurniture";
 import Contact from "./screens/Contact";
 import BasicSearch from "./screens/BasicSeacrh";
-
+import "./src/i18n/i18n.config";
 const Stack = createNativeStackNavigator();
 export default function App() {
   const [fontsLoaded] = useFonts({

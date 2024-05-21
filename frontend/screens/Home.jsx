@@ -16,6 +16,8 @@ import ChatBot from "./ChatBot";
 import NewFurniture from "./NewFurniture";
 import NewestFurniture from "./NewestFurniture";
 import Profile from "./Profile";
+import "../src/i18n/i18n.config";
+import { useTranslation } from "react-i18next";
 
 const Home = () => {
   const navigation = useNavigation();
@@ -45,21 +47,28 @@ const Home = () => {
     if (userLoggedIn) {
       navigation.navigate("Cart");
     } else {
-      // Navigate to the Login page when hasId is false
       navigation.navigate("Login");
     }
   };
   const handleChatBotPress = () => {
-    // Navigate to the ChatBot screen
     navigation.navigate("ChatBot");
   };
+  const { t, i18n } = useTranslation();
 
+  const changeLanguage = () => {
+    if (i18n.language === "en") {
+      i18n.changeLanguage("ar");
+      console.log("htt");
+    } else {
+      i18n.changeLanguage("en");
+    }
+  };
   if (!userData) {
     return (
       <SafeAreaView style={styles.centeredContainer}>
         <TouchableOpacity onPress={handlePress}>
           <View style={styles.loginBtn}>
-            <Text style={styles.menuItemText}>LOGIN</Text>
+            <Text style={styles.menuItemText}>{t("login")}</Text>
           </View>
         </TouchableOpacity>
       </SafeAreaView>
@@ -76,7 +85,14 @@ const Home = () => {
                 {userData ? userData.location : "Leuven, Belguim"}
               </Text>
 
-              <View style={{ alignItems: "flex-end" }}></View>
+              <View style={{ alignItems: "flex-end" }}>
+                <TouchableOpacity
+                  style={styles.buttonLan}
+                  onPress={changeLanguage}
+                >
+                  <Ionicons name="language-outline" size={36} color="black" />
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
 
@@ -84,20 +100,22 @@ const Home = () => {
             <Welcome />
             <Carousel />
             <NewestFurniture />
+            <View style={{ marginVertical: 40 }} />
 
-            <View style={{ marginVertical: 10 }} />
-            <TouchableOpacity onPress={handleChatBotPress}>
-              <View
-                style={{ justifyContent: "flex-end", alignItems: "flex-end" }}
-              >
-                <Ionicons
-                  name="chatbubble-ellipses-outline"
-                  size={44}
-                  color="black"
-                />
-              </View>
+            <TouchableOpacity
+              onPress={handleChatBotPress}
+              style={[
+                styles.buttonLan,
+                { position: "absolute", bottom: 16, right: 16, zIndex: 999 },
+              ]}
+            >
+              <Ionicons
+                name="chatbubbles-outline"
+                size={36}
+                color="black"
+                style={styles.chatIcon}
+              />
             </TouchableOpacity>
-            <View style={{ marginVertical: 30 }} />
           </ScrollView>
         </SafeAreaView>
       </GestureHandlerRootView>
@@ -114,6 +132,7 @@ const styles = StyleSheet.create({
   appBarWrapper: {
     marginHorizontal: 22,
     marginTop: SIZES.small,
+    marginBottom:-20,
   },
   appBar: {
     flexDirection: "row",
@@ -159,5 +178,25 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+  },
+  buttonLan: {
+    backgroundColor: COLORS.lightWhite,
+    borderRadius: 40,
+    width: 60,
+    height: 60,
+    justifyContent: "center",
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  chatIcon: {
+    fontSize: 44,
+    color: "black",
   },
 });

@@ -24,7 +24,6 @@ const FurnitureOverview = () => {
         .select("*");
 
       console.log(error);
-      //console.log(furnitures);
       if (furnitures) {
         setFurniture(furnitures);
       }
