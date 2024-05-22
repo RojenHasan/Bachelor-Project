@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import {
   View,
   Text,
+  Image,
   TextInput,
   TouchableOpacity,
   StyleSheet,
@@ -12,6 +13,9 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { supabase } from "../src/lib/supabase";
 import SearchTile from "../components/SearchTile";
+import { COLORS } from "../constants";
+import questions from "../constants/questions.json";
+import stringSimilarity from "string-similarity";
 
 const ChatBot = () => {
   const [messages, setMessages] = useState([]);
@@ -25,9 +29,14 @@ const ChatBot = () => {
   }, []);
 
   const sendDefaultMessage = () => {
-    const defaultMessage =
-      "Hello! How can I assist you today? You can ask about our opening hours, address, or products.";
-    setMessages([{ text: defaultMessage, sender: "bot" }]);
+    const defaultMessage1 = "Our virtual assistant is here to help you.";
+
+    const defaultMessage2 = "Hello! How can I assist you today?";
+
+    setMessages([
+      { text: defaultMessage1, sender: "bot" },
+      { text: defaultMessage2, sender: "bot", action: "options" },
+    ]);
   };
 
   const handleSendMessage = async () => {
@@ -36,39 +45,50 @@ const ChatBot = () => {
     const newMessages = [...messages, { text: input, sender: "user" }];
     setMessages(newMessages);
     setInput("");
-
-    const keywords = ["opening", "address", "product"];
-    const containsKeyword = keywords.some((keyword) =>
-      input.toLowerCase().includes(keyword)
-    );
-
-    if (containsKeyword) {
-      let responseMessage = "";
-      if (input.toLowerCase().includes("opening")) {
-        responseMessage = "We are open from 8:30 to 17:30.";
-      } else if (input.toLowerCase().includes("address")) {
-        responseMessage =
-          "We do not have a physical address, we only exist online.";
-      } else if (input.toLowerCase().includes("product")) {
-        const products = await fetchMatchingProducts(input);
-        setMatchedProducts(products);
-
-        if (products.length > 0) {
-          responseMessage = "Here are some products that you may like:";
-        } else {
-          responseMessage = "No products found.";
+    try {
+      let bestMatch = { similarity: 0, answer: "" };
+  
+      questions.forEach((q) => {
+        const similarity = stringSimilarity.compareTwoStrings(
+          input.toLowerCase(),
+          q.question.toLowerCase()
+        );
+  
+        if (similarity > bestMatch.similarity) {
+          bestMatch = { similarity, answer: q.answer };
         }
+        // else if (input.toLowerCase().includes("product")) {
+        //   const products = await fetchMatchingProducts(input);
+        //   setMatchedProducts(products);
+  
+        //   if (products.length > 0) {
+        //     responseMessage = "Here are some products that you may like:";
+        //   } else {
+        //     responseMessage = "No products found.";
+        //   }
+        // }
+      });
+  
+      if (bestMatch.similarity > 0.5) { 
+        setMessages([
+          ...newMessages,
+          { text: bestMatch.answer, sender: "bot" },
+        ]);
+      } else {
+        const helpOptionsMessage =
+          "I'm sorry, I can't assist with that. How can I help you?";
+        setMessages([
+          ...newMessages,
+          { text: helpOptionsMessage, sender: "bot" },
+        ]);
+        setAwaitingUserResponse(true);
       }
-
-      setMessages([...newMessages, { text: responseMessage, sender: "bot" }]);
-    } else {
-      const helpOptionsMessage =
-        "I'm sorry, I can't assist with that. How can I help you?";
+    } catch (error) {
+      console.error("Error handling message:", error.message);
       setMessages([
         ...newMessages,
-        { text: helpOptionsMessage, sender: "bot" },
+        { text: "An error occurred. Please try again.", sender: "bot" },
       ]);
-      setAwaitingUserResponse(true);
     }
   };
 
@@ -152,6 +172,9 @@ const ChatBot = () => {
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 20}
     >
+      <View style={styles.titleContainer}>
+        <Text style={styles.titleText}>PIVOT - ChatBot</Text>
+      </View>
       <ScrollView
         ref={scrollViewRef}
         contentContainerStyle={styles.messagesContainer}
@@ -165,7 +188,16 @@ const ChatBot = () => {
               message.sender === "bot" ? styles.botMessage : styles.userMessage,
             ]}
           >
-            <Text style={styles.messageText}>{message.text}</Text>
+            {message.sender === "bot" && (
+              <Image
+                source={require("../assets/images/chatbot.jpg")}
+                style={styles.avatar}
+              />
+            )}
+
+            <View style={styles.messageContent}>
+              <Text style={styles.messageText}>{message.text}</Text>
+            </View>
           </View>
         ))}
         {matchedProducts.length > 0 && (
@@ -224,7 +256,18 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
     paddingVertical: 10,
   },
+  avatar: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    marginRight: 10,
+    marginTop: 2,
+  },
+  messageContent: {
+    flex: 1,
+  },
   message: {
+    flexDirection: "row",
     alignSelf: "flex-start",
     maxWidth: "80%",
     marginBottom: 10,
@@ -234,9 +277,12 @@ const styles = StyleSheet.create({
   },
   botMessage: {
     backgroundColor: "#e5e5ea",
+    flexDirection: "row",
+    alignItems: "center",
   },
   userMessage: {
-    backgroundColor: "#b2f5ea",
+    backgroundColor: "#ACBAB0",
+    color: COLORS.white,
     alignSelf: "flex-end",
   },
   messageText: {
@@ -261,7 +307,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   sendButton: {
-    backgroundColor: "#007bff",
+    backgroundColor: COLORS.primary,
     borderRadius: 20,
     padding: 10,
   },
@@ -272,23 +318,37 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderTopWidth: 1,
     borderColor: "#ccc",
-    backgroundColor: "#f9f9f9",
+    backgroundColor: COLORS.lightWhite,
   },
   optionButton: {
     paddingHorizontal: 20,
     paddingVertical: 10,
     borderRadius: 10,
-    backgroundColor: "#007bff",
+    backgroundColor: COLORS.lightWhite,
     marginBottom: 10,
+    borderWidth: 1, // Adding border width
+    borderColor: COLORS.primary,
   },
+
   optionText: {
-    color: "white",
+    color: COLORS.primary,
     fontSize: 16,
     fontWeight: "bold",
     textAlign: "center",
   },
   productsContainer: {
     marginVertical: 10,
+  },
+  titleContainer: {
+    backgroundColor: COLORS.primary,
+    padding: 25,
+    alignItems: "center",
+  },
+  titleText: {
+    marginTop: 10,
+    color: "white",
+    fontSize: 20,
+    fontWeight: "bold",
   },
 });
 
