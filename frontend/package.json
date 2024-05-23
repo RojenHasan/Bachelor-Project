@@ -54,6 +54,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.24.0",
+    "@types/string-similarity": "^4.0.2",
     "supabase": "^1.167.4"
   },
   "private": true
