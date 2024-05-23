@@ -53,13 +53,13 @@ const Search = () => {
           {
             query_embedding: data.embedding,
             match_threshold: 0.78,
-            match_count: 5,
+            match_count: 20,
           }
         );
 
         setFurniture(matchedFurniture);
       } else {
-        setFurniture([]); 
+        setFurniture([]);
       }
     } catch (error) {
       console.error("Error in handleSearch:", error.message);
