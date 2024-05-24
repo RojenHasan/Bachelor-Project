@@ -22,6 +22,7 @@ import SharedButton from "../components/auth/Button";
 import { Ionicons } from "@expo/vector-icons";
 import axios from "axios";
 import { useTranslation } from "react-i18next";
+import firestore from "@react-native-firebase/firestore";
 
 const AddFurniture = () => {
   const [name, setName] = useState("");
@@ -143,6 +144,16 @@ const AddFurniture = () => {
       } else {
         console.log("Insert Success:", data);
         Alert.alert("Success", "Furniture added successfully");
+        // const furnitureData = {
+        //   name: name,
+        //   description: description,
+        //   price: price,
+        //   photo_url: secure_url,
+        //   type: type,
+        //   email: email,
+        // };
+
+        // await firestore().collection("furniture").add(furnitureData);
         setName("");
         setDescription("");
         setPrice("");
