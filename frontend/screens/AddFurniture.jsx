@@ -51,7 +51,6 @@ const AddFurniture = () => {
         const parsedData = JSON.parse(userData);
         setUserLoggedIn(true);
         setUserData(parsedData);
-
         setEmail(parsedData.email);
       }
     } catch (error) {
@@ -75,13 +74,10 @@ const AddFurniture = () => {
         quality: 1,
       });
 
-      console.log("ImagePicker Result:", result);
 
       if (!result.cancelled) {
         const selectedImageUrl = result.assets[0].uri;
-        console.log("Selected image URI:", selectedImageUrl);
         setPhoto_url(selectedImageUrl);
-        console.log("photoUrl after setting:", selectedImageUrl);
       } else {
         console.log("Image selection canceled");
       }

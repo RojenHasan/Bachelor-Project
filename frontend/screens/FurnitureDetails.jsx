@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   View,
   StyleSheet,
@@ -6,19 +6,23 @@ import {
   TouchableOpacity,
   SafeAreaView,
   FlatList,
+  Alert,
   Image,
   ActivityIndicator,
 } from "react-native";
-import { useRoute } from "@react-navigation/native";
+import { useRoute, useFocusEffect } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import { COLORS, SIZES } from "../constants";
 import { supabase } from "../src/lib/supabase";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const FurnitureDetails = ({ navigation }) => {
   const route = useRoute();
   const { item } = route.params;
   const [sofa, setSofa] = useState(null);
   const [similarSofas, setSimilarSofas] = useState([]);
+  const [userData, setUserData] = useState(null);
+  const [userLoggedIn, setUserLoggedIn] = useState(false);
 
   useEffect(() => {
     const fetchSofa = async () => {
@@ -28,11 +32,13 @@ const FurnitureDetails = ({ navigation }) => {
         .eq("id", item.id)
         .single();
 
-      if (sofa) {
-        setSofa(sofa);
-      }
-    };
-    fetchSofa();
+        if (sofa) {
+          setSofa(sofa);
+        }
+      };
+    
+  
+          fetchSofa();
   }, [item.id]);
 
   useEffect(() => {
@@ -51,6 +57,43 @@ const FurnitureDetails = ({ navigation }) => {
 
     fetchSimilarSofas();
   }, [item?.embedding]);
+
+  useEffect(() => {
+    const checkUserExistence = async () => {
+      const id = await AsyncStorage.getItem("id");
+      const userID = `user${JSON.parse(id)}`;
+      try {
+        const userData = await AsyncStorage.getItem(userID);
+        if (userData !== null) {
+          const parsedData = JSON.parse(userData);
+          setUserLoggedIn(true);
+          setUserData(parsedData);
+        }
+      } catch (error) {
+        console.error("Error retrieving user data:", error);
+      }
+    };
+
+    checkUserExistence();
+  }, []);
+
+  const deleteItem = async () => {
+    if (item.email === userData.email) {
+      const { error } = await supabase
+        .from("furniture")
+        .delete()
+        .eq("id", item.id);
+
+      if (error) {
+        Alert.alert("Error", "Failed to delete the item.");
+      } else {
+        Alert.alert("Success", "Item deleted successfully.");
+        navigation.goBack();
+      }
+    } else {
+      Alert.alert("Error", "You can not delete this item");
+    }
+  };
 
   if (!sofa) {
     return <ActivityIndicator />;
@@ -89,8 +132,8 @@ const FurnitureDetails = ({ navigation }) => {
           <Ionicons name="chevron-back-circle" size={30} />
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => {}}>
-          <Ionicons name="heart" size={30} color={COLORS.primary} />
+        <TouchableOpacity onPress={deleteItem}>
+          <Ionicons name="trash" size={30} color={COLORS.black} />
         </TouchableOpacity>
       </View>
       <Image source={{ uri: item.photo_url }} style={styles.image} />
@@ -112,16 +155,17 @@ const FurnitureDetails = ({ navigation }) => {
         <View style={styles.cartRow}>
           <TouchableOpacity
             onPress={() =>
-              navigation.navigate("Contact", { email: item.email, name: item.name })
+              navigation.navigate("Contact", {
+                email: item.email,
+                name: item.name,
+              })
             }
             style={styles.cartBtn}
           >
             <Text style={styles.cartTitle}>Contact</Text>
           </TouchableOpacity>
         </View>
-        <SafeAreaView
-          style={{marginBottom:100 }}
-        >
+        <SafeAreaView style={{ marginBottom: 100 }}>
           <Text style={styles.similar}>Similar products</Text>
           <FlatList
             data={similarSofas}
