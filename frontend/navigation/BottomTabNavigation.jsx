@@ -8,6 +8,7 @@ import Search from "../screens/Search";
 import Profile from "../screens/Profile";
 import Category from "../screens/Category";
 import AddFurniture from "../screens/AddFurniture";
+import ChatMessagesScreen from "../screens/ChatMessagesScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -81,6 +82,21 @@ const BottomTabNavigation = () => {
             return (
               <Ionicons
                 name={focused ? "add-circle" : "add-circle-outline"}
+                size={24}
+                color={focused ? COLORS.primary : COLORS.gray2}
+              />
+            );
+          },
+        }}
+      />
+      <Tab.Screen
+        name="Messenger"
+        component={ChatMessagesScreen}
+        options={{
+          tabBarIcon: ({ focused }) => {
+            return (
+              <Ionicons
+                name={focused ? "chatbox-ellipses" : "chatbox-ellipses-outline"}
                 size={24}
                 color={focused ? COLORS.primary : COLORS.gray2}
               />
