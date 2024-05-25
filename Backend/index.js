@@ -7,7 +7,6 @@ var cors = require("cors");
 const app = express();
 const server = http.createServer(app);
 const io = socketIo(server);
-const userController = require("./controllers/userController");
 
 const productRoute = require("./routes/products");
 const authRoute = require("./routes/auth");
@@ -15,7 +14,7 @@ const paymentRoute = require("./routes/payment");
 const orderRoute = require("./routes/orders");
 const userRoute = require("./routes/user");
 const cartRoute = require("./routes/cart");
-//const uploadRote = require("./controllers/routeUpload");
+const messageRoute = require("./routes/message");
 
 io.on("connection", (socket) => {
   console.log("a user connected");
@@ -48,37 +47,9 @@ app.use("/api/payments", paymentRoute);
 app.use("/api/orders", orderRoute);
 app.use("/api/users", userRoute);
 app.use("/api/carts", cartRoute);
+app.use("/api/messages", messageRoute);
 
-const Message = require("./models/message");
 
-app.get("/messages", async (req, res) => {
-  try {
-    const messages = await Message.find().populate("senderId", "_id username");
-    res.json(messages);
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ error: "Internal Server Error" });
-  }
-});
-
-app.post("/messages", async (req, res) => {
-  try {
-    const { senderId, messageText } = req.body;
-
-    const newMessage = new Message({
-      senderId,
-      message: messageText,
-      timestamp: new Date(),
-    });
-
-    await newMessage.save();
-    io.emit("newMessage", newMessage);
-    res.status(200).json({ message: "Message sent Successfully" });
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ error: "Internal Server Error" });
-  }
-});
 app.listen(process.env.PORT || port, () =>
   console.log(`Example app listening on port ${process.env.PORT}!`)
 );

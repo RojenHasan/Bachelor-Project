@@ -5,7 +5,12 @@ const messageSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
   },
-  message: String,
+  senderName: {
+    type: String,
+  },
+  message: {
+    type: String,
+  },
   timeStamp: {
     type: Date,
     default: Date.now,

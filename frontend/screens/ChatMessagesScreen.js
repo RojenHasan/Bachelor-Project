@@ -11,7 +11,7 @@ import axios from "axios";
 import io from "socket.io-client";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const API_URL = "http://192.168.1.32:3000";
+const API_URL = "http://192.168.1.32:3000/api";
 
 const ChatMessagesScreen = () => {
   const [messages, setMessages] = useState([]);
@@ -68,17 +68,19 @@ const ChatMessagesScreen = () => {
 
     try {
       const response = await axios.post(`${API_URL}/messages`, {
-        senderId: userId,
-        messageType: "text",
-        messageText: newMessage,
+        senderId: userData,
+        message: newMessage,
       });
 
       if (response.status === 200) {
         const newMessageData = {
           id: response.data.id,
-          senderId: userId,
+          senderId: userData,
+          senderName: userData.username,
           message: newMessage,
         };
+
+        console.log(newMessageData);
         setMessages((prevMessages) => [...prevMessages, newMessageData]);
         setNewMessage("");
       }
@@ -98,7 +100,7 @@ const ChatMessagesScreen = () => {
           isCurrentUser ? styles.currentUserMessage : styles.otherUserMessage,
         ]}
       >
-        <Text style={styles.sender}>{item.senderId}:</Text>
+        <Text style={styles.sender}>{item.senderName}: </Text>
         <Text style={styles.text}>{item.message}</Text>
       </View>
     );
