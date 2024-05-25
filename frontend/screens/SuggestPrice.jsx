@@ -24,74 +24,19 @@ import axios from "axios";
 import { useTranslation } from "react-i18next";
 import firestore from "@react-native-firebase/firestore";
 
-const AddFurniture = () => {
+const SuggestPrice = () => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [price, setPrice] = useState("");
-  const [photo_url, setPhoto_url] = useState("");
   const [type, setType] = useState("Bed");
-  const [email, setEmail] = useState("");
+  const [suggestedPrice, setSuggestedPrice] = useState("");
   const { t, i18n } = useTranslation();
 
   const [validationError, setValidationError] = useState("");
   const navigation = useNavigation();
   const [userData, setUserData] = useState(null);
-  const [userLoggedIn, setUserLoggedIn] = useState(false);
 
-  useEffect(() => {
-    checkUserExistence();
-  }, []);
-
-  const checkUserExistence = async () => {
-    const id = await AsyncStorage.getItem("id");
-    const userID = `user${JSON.parse(id)}`;
-    try {
-      const userData = await AsyncStorage.getItem(userID);
-      if (userData !== null) {
-        const parsedData = JSON.parse(userData);
-        setUserLoggedIn(true);
-        setUserData(parsedData);
-
-        setEmail(parsedData.email);
-      }
-    } catch (error) {
-      console.error("Error retrieving user data:", error);
-    }
-  };
-  const openImageLibrary = async () => {
-    console.log("openImageLibrary function called");
-    try {
-      const { status } =
-        await ImagePicker.requestMediaLibraryPermissionsAsync();
-
-      if (status !== "granted") {
-        throw new Error("Camera roll permissions not granted");
-      }
-
-      const result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        allowsEditing: true,
-        aspect: [4, 3],
-        quality: 1,
-      });
-
-      console.log("ImagePicker Result:", result);
-
-      if (!result.cancelled) {
-        const selectedImageUrl = result.assets[0].uri;
-        console.log("Selected image URI:", selectedImageUrl);
-        setPhoto_url(selectedImageUrl);
-        console.log("photoUrl after setting:", selectedImageUrl);
-      } else {
-        console.log("Image selection canceled");
-      }
-    } catch (error) {
-      console.error("Error selecting image:", error);
-      alert("Error selecting image. Please try again.");
-    }
-  };
   const validateForm = () => {
-    if (!name || !description || !price || !type || !email || !photo_url) {
+    if (!name || !description || !type) {
       setValidationError("All fields are required");
       return false;
     }
@@ -105,38 +50,33 @@ const AddFurniture = () => {
     }
 
     try {
-      const formData = new FormData();
-      formData.append("file", {
-        uri: photo_url,
-        type: "image/jpeg",
-        name: `${name}_image.jpg`,
-      });
-      formData.append("upload_preset", "furnitureApp");
-      formData.append("cloud_name", "di5aci5xb");
-
-      const response = await fetch(
-        "https://api.cloudinary.com/v1_1/di5aci5xb/image/upload",
-        {
-          method: "post",
-          body: formData,
-        }
-      );
-      const responseData = await response.json();
-      console.log("Image uploaded to Cloudinary:", responseData.secure_url);
-
-      const { secure_url } = responseData;
 
       const { data, error } = await supabase
         .from("furniture")
         .insert({
           name: name,
           description: description,
-          price: price,
-          photo_url: secure_url,
           type: type,
-          email: email,
         })
         .select();
+
+      const { data: priceData, error: priceError } = await supabase.rpc(
+        "suggest_price",
+        {
+          query_embedding: data.embedding,
+          match_threshold: 0.75,
+          match_count: 5,
+        }
+      );
+
+      if (priceError) {
+        console.log("Suggest Price Error:", priceError);
+        Alert.alert("Error", priceError.message);
+        return;
+      }
+
+      setSuggestedPrice(priceData);
+      Alert.alert("Suggested Price", `The suggested price is $${priceData}`);
 
       if (error) {
         console.log("Insert Error:", error);
@@ -144,26 +84,13 @@ const AddFurniture = () => {
       } else {
         console.log("Insert Success:", data);
         Alert.alert("Success", "Furniture added successfully");
-        // const furnitureData = {
-        //   name: name,
-        //   description: description,
-        //   price: price,
-        //   photo_url: secure_url,
-        //   type: type,
-        //   email: email,
-        // };
 
-        // await firestore().collection("furniture").add(furnitureData);
         setName("");
         setDescription("");
-        setPrice("");
-        setPhoto_url("");
         setType("Bed");
-        setEmail("");
-        navigation.goBack();
       }
     } catch (error) {
-      console.error("Error uploading image to Cloudinary:", error);
+      console.error("Error:", error);
       alert("Error uploading image to Cloudinary. Please try again.");
     }
   };
@@ -179,15 +106,7 @@ const AddFurniture = () => {
               style={styles.img}
             />
             <Text style={styles.motto}>{t("add")}</Text>
-            <View style={styles.inputContainer}>
-              <Text style={styles.label}>{t("your-email")}</Text>
-              <TextInput
-                style={styles.input}
-                value={email}
-                onChangeText={setEmail}
-                placeholder={t("Enter-your-email")}
-              />
-            </View>
+
             <View style={styles.inputContainer}>
               <Text style={styles.label}>{t("Name")}:</Text>
               <TextInput
@@ -206,30 +125,6 @@ const AddFurniture = () => {
                 placeholder={t("Enter-furniture-description")}
               />
             </View>
-            <View style={styles.inputContainer}>
-              <Text style={styles.label}>{t("Price")}:</Text>
-              <TextInput
-                style={styles.input}
-                value={price}
-                onChangeText={setPrice}
-                placeholder={t("Enter-furniture-price")}
-                keyboardType="numeric"
-              />
-            </View>
-            <TouchableOpacity onPress={openImageLibrary}>
-              <View style={styles.chooseImageContainer}>
-                <Ionicons name="image-outline" size={34} color="black" />
-                <Text style={styles.chooseImageText}>{t("Choose-Image")}</Text>
-              </View>
-            </TouchableOpacity>
-            {photo_url ? (
-              <Image
-                source={{ uri: photo_url }}
-                style={{ width: 200, height: 200 }}
-              />
-            ) : (
-              <Text style={styles.noImageText}>{t("No-image-selected")}</Text>
-            )}
 
             <View style={styles.inputContainer}>
               <Text style={styles.label}>Type:</Text>
@@ -248,9 +143,13 @@ const AddFurniture = () => {
                 </Picker>
               </View>
             </View>
+            <View style={styles.inputContainer}>
+              <Text style={styles.label}>Suggested Price:</Text>
+              <Text style={styles.suggestedPrice}>${suggestedPrice}</Text>
+            </View>
             <SharedButton
               style={styles.button}
-              title={t("add")}
+              title="Suggest a price"
               onPress={handleAddFurniture}
             />
           </View>
@@ -260,7 +159,7 @@ const AddFurniture = () => {
   );
 };
 
-export default AddFurniture;
+export default SuggestPrice;
 
 const styles = StyleSheet.create({
   scroll: {
