@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -17,43 +17,51 @@ const ChatMessagesScreen = () => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [userId, setUserId] = useState("");
+  const [userData, setUserData] = useState(null);
 
   const socket = io(API_URL);
 
-  const fetchMessages = useCallback(async () => {
-    try {
-      const response = await axios.get(`${API_URL}/messages`);
-      setMessages(response.data);
-    } catch (error) {
-      console.error("Error fetching messages: ", error);
-    }
-  }, []);
-
   useEffect(() => {
-    const checkUserExistence = async () => {
-      const id = await AsyncStorage.getItem("id");
-      const userID = `user${JSON.parse(id)}`;
+    const fetchData = async () => {
       try {
-        const userData = await AsyncStorage.getItem(userID);
-        if (userData !== null) {
-          const parsedData = JSON.parse(userData);
-          setUserId(parsedData.id);
+        const id = await AsyncStorage.getItem("id");
+        if (id !== null) {
+          const userID = `user${JSON.parse(id)}`;
+          const userData = await AsyncStorage.getItem(userID);
+          if (userData !== null) {
+            const parsedData = JSON.parse(userData);
+            setUserId(parsedData.id);
+            setUserData(parsedData);
+          }
         }
       } catch (error) {
         console.error("Error retrieving user data:", error);
       }
     };
 
-    checkUserExistence();
-    fetchMessages();
+    const fetchInitialMessages = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/messages`);
+        setMessages(response.data);
+      } catch (error) {
+        console.error("Error fetching messages:", error);
+      }
+    };
+
+    fetchData();
+    fetchInitialMessages();
+
+    socket.connect();
+
     socket.on("newMessage", (message) => {
+      console.log("Received new message:", message);
       setMessages((prevMessages) => [...prevMessages, message]);
     });
 
     return () => {
-      socket.off("newMessage");
+      socket.disconnect();
     };
-  }, [fetchMessages]);
+  }, []);
 
   const sendMessage = async () => {
     if (newMessage.trim() === "") return;
@@ -66,19 +74,35 @@ const ChatMessagesScreen = () => {
       });
 
       if (response.status === 200) {
+        const newMessageData = {
+          id: response.data.id,
+          senderId: userId,
+          message: newMessage,
+        };
+        setMessages((prevMessages) => [...prevMessages, newMessageData]);
         setNewMessage("");
       }
     } catch (error) {
-      console.error("Error sending message: ", error);
+      console.error("Error sending message:", error);
     }
   };
 
-  const renderItem = ({ item }) => (
-    <View style={styles.message}>
-      <Text style={styles.sender}>jjj: </Text>
-      <Text style={styles.text}>{item.message}</Text>
-    </View>
-  );
+  const renderItem = ({ item, index }) => {
+    const isCurrentUser = item.senderId === userId;
+
+    return (
+      <View
+        key={item._id || index.toString()}
+        style={[
+          styles.message,
+          isCurrentUser ? styles.currentUserMessage : styles.otherUserMessage,
+        ]}
+      >
+        <Text style={styles.sender}>{item.senderId}:</Text>
+        <Text style={styles.text}>{item.message}</Text>
+      </View>
+    );
+  };
 
   return (
     <View style={styles.container}>
@@ -86,14 +110,18 @@ const ChatMessagesScreen = () => {
         data={messages}
         renderItem={renderItem}
         keyExtractor={(item) => item._id}
+        contentContainerStyle={{ paddingVertical: 10 }}
+        ListEmptyComponent={<Text>No messages</Text>}
       />
-      <TextInput
-        style={styles.input}
-        value={newMessage}
-        onChangeText={setNewMessage}
-        placeholder="Type a message"
-      />
-      <Button title="Send" onPress={sendMessage} />
+      <View style={styles.inputContainer}>
+        <TextInput
+          style={styles.input}
+          value={newMessage}
+          onChangeText={setNewMessage}
+          placeholder="Type a message"
+        />
+        <Button title="Send" onPress={sendMessage} />
+      </View>
     </View>
   );
 };
@@ -113,12 +141,21 @@ const styles = StyleSheet.create({
   text: {
     marginLeft: 5,
   },
+  inputContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    borderTopWidth: 1,
+    borderColor: "#ccc",
+    paddingTop: 10,
+    marginBottom: 80,
+  },
   input: {
+    flex: 1,
     borderWidth: 1,
     borderColor: "#ccc",
     borderRadius: 5,
-    padding: 10,
-    marginVertical: 10,
+    paddingHorizontal: 10,
+    marginRight: 10,
   },
 });
 

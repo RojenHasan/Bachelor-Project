@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 
-const Cart = () => {
+const Messenger = () => {
   return (
     <View>
       <Text>Cart</Text>
@@ -14,4 +14,4 @@ const Cart = () => {
   );
 };
 
-export default Cart;
+export default Messenger;

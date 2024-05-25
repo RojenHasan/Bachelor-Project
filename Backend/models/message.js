@@ -5,10 +5,6 @@ const messageSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
   },
-  messageType: {
-    type: String,
-    enum: ["text", "image"],
-  },
   message: String,
   timeStamp: {
     type: Date,

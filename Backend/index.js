@@ -63,11 +63,10 @@ app.get("/messages", async (req, res) => {
 
 app.post("/messages", async (req, res) => {
   try {
-    const { senderId, messageType, messageText } = req.body;
+    const { senderId, messageText } = req.body;
 
     const newMessage = new Message({
       senderId,
-      messageType,
       message: messageText,
       timestamp: new Date(),
     });

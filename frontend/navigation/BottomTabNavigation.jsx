@@ -90,7 +90,7 @@ const BottomTabNavigation = () => {
         }}
       />
       <Tab.Screen
-        name="Messenger"
+        name="ChatMessagesScreen"
         component={ChatMessagesScreen}
         options={{
           tabBarIcon: ({ focused }) => {
