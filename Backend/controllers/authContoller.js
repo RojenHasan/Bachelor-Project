@@ -1,6 +1,5 @@
 const User = require("../models/User");
 
-// imports the CryptoJS library, which is used for encryption and decryption purposes.
 const CryptoJS = require("crypto-js");
 
 const jwt = require("jsonwebtoken");

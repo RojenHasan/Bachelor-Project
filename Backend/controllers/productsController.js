@@ -7,7 +7,6 @@ module.exports = {
       let image = "";
 
       if (req.file) {
-        // Call routeUploader to upload image
         const uploadResult = await routeUploader(req.file.path);
         if (!uploadResult.success) {
           return res

@@ -6,10 +6,12 @@ import {
   Button,
   FlatList,
   StyleSheet,
+  SafeAreaView,
 } from "react-native";
 import axios from "axios";
 import io from "socket.io-client";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { COLORS } from "../constants";
 
 const API_URL = "http://192.168.1.32:3000/api";
 
@@ -107,57 +109,81 @@ const ChatMessagesScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <FlatList
-        data={messages}
-        renderItem={renderItem}
-        keyExtractor={(item) => item._id}
-        contentContainerStyle={{ paddingVertical: 10 }}
-        ListEmptyComponent={<Text>No messages</Text>}
-      />
-      <View style={styles.inputContainer}>
-        <TextInput
-          style={styles.input}
-          value={newMessage}
-          onChangeText={setNewMessage}
-          placeholder="Type a message"
+    <SafeAreaView style={styles.container}>
+      <View style={styles.container}>
+        <FlatList
+          data={messages}
+          renderItem={renderItem}
+          keyExtractor={(item) => item._id}
+          contentContainerStyle={{ flexGrow: 1, paddingHorizontal: 16 }}
+          ListEmptyComponent={<Text>No messages</Text>}
         />
-        <Button title="Send" onPress={sendMessage} />
+        <View style={styles.inputContainer}>
+          <TextInput
+            style={styles.input}
+            value={newMessage}
+            onChangeText={setNewMessage}
+            placeholder="Type a message"
+          />
+          <Button title="Send" onPress={sendMessage} color={COLORS.primary} />
+        </View>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 10,
+    backgroundColor: "#9CA5A6",
+    marginHorizontal: 3,
+    marginBottom: 35,
+    marginTop: 15,
   },
   message: {
-    flexDirection: "row",
-    marginVertical: 5,
+    maxWidth: "80%",
+    padding: 10,
+    marginBottom: 12,
+    borderRadius: 8,
+  },
+  currentUserMessage: {
+    backgroundColor: "#dcf8c6",
+  },
+  otherUserMessage: {
+    backgroundColor: "#ffffff",
   },
   sender: {
     fontWeight: "bold",
+    marginBottom: 4,
   },
   text: {
-    marginLeft: 5,
+    fontSize: 16,
+  },
+  currentUserText: {
+    color: "#000000",
+  },
+  otherUserText: {
+    color: "#000000",
   },
   inputContainer: {
     flexDirection: "row",
     alignItems: "center",
-    borderTopWidth: 1,
-    borderColor: "#ccc",
-    paddingTop: 10,
-    marginBottom: 80,
+    backgroundColor: "#ffffff",
+    paddingVertical: 8,
+    paddingHorizontal: 16,
   },
   input: {
     flex: 1,
+    height: 40,
     borderWidth: 1,
     borderColor: "#ccc",
-    borderRadius: 5,
-    paddingHorizontal: 10,
+    borderRadius: 20,
+    paddingHorizontal: 16,
     marginRight: 10,
+  },
+  emptyText: {
+    alignSelf: "center",
+    marginTop: 20,
+    fontSize: 16,
   },
 });
 

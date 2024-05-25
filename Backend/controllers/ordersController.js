@@ -22,8 +22,6 @@ module.exports = {
                 select: "_description _product_location"
               })
               .exec();
-           // .populate('productId') // Populate the 'productId' field
-           // .exec();
       
           res.status(200).json(userOrders);
         } catch (error) {
