@@ -18,6 +18,7 @@ import NewFurniture from "./screens/NewFurniture";
 import Contact from "./screens/Contact";
 import BasicSearch from "./screens/BasicSeacrh";
 import "./src/i18n/i18n.config";
+import CarsCategory from "./screens/CarsCategory";
 const Stack = createNativeStackNavigator();
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -85,6 +86,11 @@ export default function App() {
         <Stack.Screen
           name="FurnitureCategory"
           component={FurnitureCategory}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="CarsCategory"
+          component={CarsCategory}
           options={{ headerShown: false }}
         />
         <Stack.Screen

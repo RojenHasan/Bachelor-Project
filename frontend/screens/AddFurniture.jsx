@@ -74,7 +74,6 @@ const AddFurniture = () => {
         quality: 1,
       });
 
-
       if (!result.cancelled) {
         const selectedImageUrl = result.assets[0].uri;
         setPhoto_url(selectedImageUrl);
@@ -138,7 +137,6 @@ const AddFurniture = () => {
         console.log("Insert Error:", error);
         Alert.alert("Error", error.message);
       } else {
-        console.log("Insert Success:", data);
         Alert.alert("Success", "Furniture added successfully");
         // const furnitureData = {
         //   name: name,
