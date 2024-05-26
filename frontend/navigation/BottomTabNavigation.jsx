@@ -8,7 +8,7 @@ import Search from "../screens/Search";
 import Profile from "../screens/Profile";
 import Category from "../screens/Category";
 import AddFurniture from "../screens/AddFurniture";
-import ChatMessagesScreen from "../screens/ChatMessagesScreen";
+import Chatting from "../screens/Chatting";
 
 const Tab = createBottomTabNavigator();
 
@@ -90,8 +90,8 @@ const BottomTabNavigation = () => {
         }}
       />
       <Tab.Screen
-        name="ChatMessagesScreen"
-        component={ChatMessagesScreen}
+        name="Chatting"
+        component={Chatting}
         options={{
           tabBarIcon: ({ focused }) => {
             return (

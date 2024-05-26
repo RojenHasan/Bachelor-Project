@@ -17,7 +17,7 @@ import { COLORS, SIZES } from "../constants";
 
 const API_URL = "http://192.168.1.32:3000/api";
 
-const ChatMessagesScreen = () => {
+const Chatting = () => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [userId, setUserId] = useState("");
@@ -217,4 +217,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ChatMessagesScreen;
+export default Chatting;
