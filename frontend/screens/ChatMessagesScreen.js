@@ -3,15 +3,17 @@ import {
   View,
   Text,
   TextInput,
+  TouchableOpacity,
   Button,
   FlatList,
   StyleSheet,
   SafeAreaView,
 } from "react-native";
 import axios from "axios";
+import { Ionicons } from "@expo/vector-icons";
 import io from "socket.io-client";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { COLORS } from "../constants";
+import { COLORS, SIZES } from "../constants";
 
 const API_URL = "http://192.168.1.32:3000/api";
 
@@ -21,9 +23,9 @@ const ChatMessagesScreen = () => {
   const [userId, setUserId] = useState("");
   const [userData, setUserData] = useState(null);
 
-  const socket = useRef(io(API_URL)); // Use useRef for socket instance
+  const socket = useRef(io(API_URL));
 
-  const flatListRef = useRef(null); // Ref for FlatList
+  const flatListRef = useRef(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -85,7 +87,7 @@ const ChatMessagesScreen = () => {
 
         setMessages((prevMessages) => [...prevMessages, newMessageData]);
         setNewMessage("");
-        scrollToBottom(); // Scroll to bottom after sending message
+        scrollToBottom();
       }
     } catch (error) {
       console.error("Error sending message:", error);
@@ -99,7 +101,7 @@ const ChatMessagesScreen = () => {
   };
 
   const renderItem = ({ item, index }) => {
-    const isCurrentUser = item.senderId === userId;
+    const isCurrentUser = item.senderId._id === userData._id;
 
     return (
       <View
@@ -109,8 +111,14 @@ const ChatMessagesScreen = () => {
           isCurrentUser ? styles.currentUserMessage : styles.otherUserMessage,
         ]}
       >
-        <Text style={styles.sender}>{item.senderName}: </Text>
-        <Text style={styles.text}>{item.message}</Text>
+        <Text
+          style={[styles.textName, isCurrentUser && styles.currentUserName]}
+        >
+          {item.senderName}:
+        </Text>
+        <Text style={[styles.text, isCurrentUser && styles.currentUserText]}>
+          {item.message}
+        </Text>
       </View>
     );
   };
@@ -125,7 +133,7 @@ const ChatMessagesScreen = () => {
           keyExtractor={(item) => item._id}
           contentContainerStyle={{ flexGrow: 1, paddingHorizontal: 16 }}
           ListEmptyComponent={<Text>No messages</Text>}
-          onContentSizeChange={scrollToBottom} // Scroll to bottom on content size change (new messages)
+          onContentSizeChange={scrollToBottom}
         />
         <View style={styles.inputContainer}>
           <TextInput
@@ -134,7 +142,9 @@ const ChatMessagesScreen = () => {
             onChangeText={setNewMessage}
             placeholder="Type a message"
           />
-          <Button title="Send" onPress={sendMessage} color={COLORS.primary} />
+          <TouchableOpacity onPress={sendMessage} style={styles.iconContainer}>
+            <Ionicons name="send-outline" size={24} color="black" />
+          </TouchableOpacity>
         </View>
       </View>
     </SafeAreaView>
@@ -144,31 +154,45 @@ const ChatMessagesScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#9CA5A6",
+    backgroundColor: "#fff",
     marginHorizontal: 3,
     marginBottom: 35,
     marginTop: 15,
   },
   message: {
-    maxWidth: "80%",
+    marginVertical: 5,
     padding: 10,
-    marginBottom: 12,
-    borderRadius: 8,
+    borderRadius: 10,
+    width: "80%",
   },
   currentUserMessage: {
-    backgroundColor: "#dcf8c6",
+    backgroundColor: COLORS.primary,
+    alignSelf: "flex-end",
   },
   otherUserMessage: {
-    backgroundColor: "#ffffff",
+    backgroundColor: "#ECECEC",
+    alignSelf: "flex-start",
   },
   sender: {
     fontWeight: "bold",
-    marginBottom: 3,
-    fontSize: 18,
-    color: COLORS.primary,
+    marginBottom: 5,
   },
   text: {
     fontSize: 16,
+    color: "#000",
+  },
+  currentUserText: {
+    color: "#fff",
+  },
+  currentUserName: {
+    fontWeight: "bold",
+    color: "#fff",
+    fontSize: SIZES.medium,
+  },
+  textName: {
+    fontWeight: "bold",
+    fontSize: SIZES.medium,
+    marginBottom: 10,
   },
   inputContainer: {
     flexDirection: "row",
