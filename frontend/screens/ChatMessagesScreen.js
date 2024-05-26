@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   View,
   Text,
@@ -21,7 +21,9 @@ const ChatMessagesScreen = () => {
   const [userId, setUserId] = useState("");
   const [userData, setUserData] = useState(null);
 
-  const socket = io(API_URL);
+  const socket = useRef(io(API_URL)); // Use useRef for socket instance
+
+  const flatListRef = useRef(null); // Ref for FlatList
 
   useEffect(() => {
     const fetchData = async () => {
@@ -53,15 +55,14 @@ const ChatMessagesScreen = () => {
     fetchData();
     fetchInitialMessages();
 
-    socket.connect();
+    socket.current.connect();
 
-    socket.on("newMessage", (message) => {
-      console.log("Received new message:", message);
+    socket.current.on("newMessage", (message) => {
       setMessages((prevMessages) => [...prevMessages, message]);
     });
 
     return () => {
-      socket.disconnect();
+      socket.current.disconnect();
     };
   }, []);
 
@@ -82,12 +83,18 @@ const ChatMessagesScreen = () => {
           message: newMessage,
         };
 
-        console.log(newMessageData);
         setMessages((prevMessages) => [...prevMessages, newMessageData]);
         setNewMessage("");
+        scrollToBottom(); // Scroll to bottom after sending message
       }
     } catch (error) {
       console.error("Error sending message:", error);
+    }
+  };
+
+  const scrollToBottom = () => {
+    if (flatListRef.current) {
+      flatListRef.current.scrollToEnd({ animated: true });
     }
   };
 
@@ -112,11 +119,13 @@ const ChatMessagesScreen = () => {
     <SafeAreaView style={styles.container}>
       <View style={styles.container}>
         <FlatList
+          ref={flatListRef}
           data={messages}
           renderItem={renderItem}
           keyExtractor={(item) => item._id}
           contentContainerStyle={{ flexGrow: 1, paddingHorizontal: 16 }}
           ListEmptyComponent={<Text>No messages</Text>}
+          onContentSizeChange={scrollToBottom} // Scroll to bottom on content size change (new messages)
         />
         <View style={styles.inputContainer}>
           <TextInput
@@ -131,6 +140,7 @@ const ChatMessagesScreen = () => {
     </SafeAreaView>
   );
 };
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -157,12 +167,6 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 16,
-  },
-  currentUserText: {
-    color: "#000000",
-  },
-  otherUserText: {
-    color: "#000000",
   },
   inputContainer: {
     flexDirection: "row",
