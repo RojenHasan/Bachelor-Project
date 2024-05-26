@@ -163,7 +163,9 @@ const styles = StyleSheet.create({
   },
   sender: {
     fontWeight: "bold",
-    marginBottom: 4,
+    marginBottom: 3,
+    fontSize: 18,
+    color: COLORS.primary,
   },
   text: {
     fontSize: 16,
