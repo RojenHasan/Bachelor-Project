@@ -153,7 +153,6 @@ const AddFurniture = () => {
         setPrice("");
         setPhoto_url("");
         setType("Bed");
-        setEmail("");
         navigation.goBack();
       }
     } catch (error) {

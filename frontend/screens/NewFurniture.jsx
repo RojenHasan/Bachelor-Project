@@ -36,7 +36,7 @@ const NewFurniture = () => {
   const navigateToDetails = (item) => {
     navigation.navigate("FurnitureDetails", { item });
   };
-  const renderSimilarSofaItem = ({ item }) => (
+  const renderItem = ({ item }) => (
     <TouchableOpacity onPress={() => navigateToDetails(item)}>
       <View style={styles.similarItemContainer}>
         <Image
@@ -65,7 +65,7 @@ const NewFurniture = () => {
         <View style={styles.header}>
           <Text style={styles.Txt(COLORS.black, 30)}>New furniture</Text>
         </View>
-        <FlatList data={furnitures} renderItem={renderSimilarSofaItem} />
+        <FlatList data={furnitures} renderItem={renderItem} />
       </SafeAreaView>
       <StatusBar style="auto" />
       <View style={{ marginVertical: 100 }} />

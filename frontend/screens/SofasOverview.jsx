@@ -23,7 +23,8 @@ const SofasOverview = () => {
       let { data: sofas, error } = await supabase
         .from("furniture")
         .select("*")
-        .ilike("type", "%Sofa%", { raw: true });
+        .ilike("type", "%Sofa%", { raw: true })
+        .order("created_at", { ascending: false });
 
       console.log(error);
       //console.log(sofas);

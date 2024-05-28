@@ -12,31 +12,51 @@ import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import { supabase } from "../src/lib/supabase";
 import { COLORS, SIZES } from "../constants";
-import { StatusBar } from "expo-status-bar";
 const NewestFurniture = () => {
-  const [furniture, setFurniture] = useState([]);
+  const [furniture, setFurniture] = useState(null);
   const navigation = useNavigation();
 
   useEffect(() => {
-    const fetchFurniture = async () => {
-      let { data: furniture, error } = await supabase
+    const fetchLatestFurniture = async () => {
+      let { data: latestFurniture, error } = await supabase
         .from("furniture")
         .select("*")
         .order("created_at", { ascending: false })
         .limit(1)
         .single();
 
-      console.log(error);
-      //console.log(furnitures);
-      if (furniture) {
-        setFurniture(furniture);
+      if (error) {
+        console.error("Error fetching latest furniture:", error.message);
+      } else if (latestFurniture) {
+        setFurniture(latestFurniture);
       }
     };
-    fetchFurniture();
+
+    fetchLatestFurniture();
+
+    supabase
+      .channel("table-db-changes")
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "furniture",
+        },
+        (payload) => {
+          fetchLatestFurniture();
+        }
+      )
+      .subscribe();
   }, []);
+
   const navigateToDetails = (item) => {
     navigation.navigate("FurnitureDetails", { item });
   };
+
+  if (!furniture) {
+    return null;
+  }
 
   return (
     <TouchableOpacity onPress={() => navigateToDetails(furniture)}>

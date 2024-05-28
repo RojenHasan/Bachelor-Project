@@ -28,7 +28,26 @@ const FurnitureOverview = () => {
         setFurniture(furnitures);
       }
     };
+    const realtimeUpdate = supabase
+      .channel("table-db-changes")
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "furniture",
+        },
+        () => {
+          fetchFurnitures();
+        }
+      )
+      .subscribe();
+
     fetchFurnitures();
+
+    return () => {
+      realtimeUpdate.unsubscribe();
+    };
   }, []);
   const navigateToDetails = (item) => {
     navigation.navigate("FurnitureDetails", { item });

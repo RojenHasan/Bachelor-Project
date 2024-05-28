@@ -23,7 +23,8 @@ const OutdoorsOverview = () => {
       let { data: outdoor, error } = await supabase
         .from("furniture")
         .select("*")
-        .ilike("type", "%outdoor%", { raw: true });
+        .ilike("type", "%outdoor%", { raw: true })
+        .order("created_at", { ascending: false });
 
       console.log(error);
       //console.log(outdoor);

@@ -32,13 +32,12 @@ const FurnitureDetails = ({ navigation }) => {
         .eq("id", item.id)
         .single();
 
-        if (sofa) {
-          setSofa(sofa);
-        }
-      };
-    
-  
-          fetchSofa();
+      if (sofa) {
+        setSofa(sofa);
+      }
+    };
+
+    fetchSofa();
   }, [item.id]);
 
   useEffect(() => {
@@ -77,6 +76,44 @@ const FurnitureDetails = ({ navigation }) => {
     checkUserExistence();
   }, []);
 
+  useEffect(() => {
+    const fetchLatestFurniture = async () => {
+      const { data: latestSofa, error } = await supabase
+        .from("furniture")
+        .select("*")
+        .order("created_at", { ascending: false })
+        .limit(1)
+        .single();
+
+      if (error) {
+        console.error("Error fetching latest furniture:", error.message);
+      } else if (latestSofa) {
+        setSofa(latestSofa);
+      }
+    };
+
+    const subscription = supabase
+      .channel("table-db-changes")
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "furniture",
+        },
+        (payload) => {
+          if (payload.old && payload.old.id === item.id) {
+            fetchLatestFurniture();
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [item.id]);
+
   const deleteItem = async () => {
     if (item.email === userData.email) {
       const { error } = await supabase
@@ -91,7 +128,7 @@ const FurnitureDetails = ({ navigation }) => {
         navigation.goBack();
       }
     } else {
-      Alert.alert("Error", "You can not delete this item");
+      Alert.alert("Error", "You cannot delete this item.");
     }
   };
 
