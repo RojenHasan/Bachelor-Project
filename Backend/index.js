@@ -4,6 +4,9 @@ const socketIo = require("socket.io");
 const dotenv = require("dotenv");
 const mongoose = require("mongoose");
 var cors = require("cors");
+const bodyParser = require("body-parser");
+const axios = require("axios");
+
 const app = express();
 const server = http.createServer(app);
 const io = socketIo(server);
@@ -33,6 +36,7 @@ mongoose
 
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ limit: "10mb", extended: true }));
+app.use(bodyParser.json());
 
 app.use(
   cors({
@@ -49,6 +53,18 @@ app.use("/api/users", userRoute);
 app.use("/api/carts", cartRoute);
 app.use("/api/messages", messageRoute);
 
+app.post("/predict", async (req, res) => {
+  try {
+    const response = await axios.post(
+      "http://127.0.0.1:5000/predict",
+      req.body
+    );
+    res.json(response.data);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error occurred while predicting the price.");
+  }
+});
 
 app.listen(process.env.PORT || port, () =>
   console.log(`Example app listening on port ${process.env.PORT}!`)

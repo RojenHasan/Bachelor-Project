@@ -9,6 +9,7 @@ import Profile from "../screens/Profile";
 import Category from "../screens/Category";
 import AddFurniture from "../screens/AddFurniture";
 import Chatting from "../screens/Chatting";
+import PredictPrice from "../screens/PredictPrice";
 
 const Tab = createBottomTabNavigator();
 
@@ -97,6 +98,21 @@ const BottomTabNavigation = () => {
             return (
               <Ionicons
                 name={focused ? "chatbox-ellipses" : "chatbox-ellipses-outline"}
+                size={24}
+                color={focused ? COLORS.primary : COLORS.gray2}
+              />
+            );
+          },
+        }}
+      />
+      <Tab.Screen
+        name="PredictPrice"
+        component={PredictPrice}
+        options={{
+          tabBarIcon: ({ focused }) => {
+            return (
+              <Ionicons
+                name={focused ? "cash" : "cash-outline"}
                 size={24}
                 color={focused ? COLORS.primary : COLORS.gray2}
               />
