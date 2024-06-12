@@ -58,7 +58,6 @@ const Home = () => {
   const changeLanguage = () => {
     if (i18n.language === "en") {
       i18n.changeLanguage("ar");
-      console.log("htt");
     } else {
       i18n.changeLanguage("en");
     }
@@ -132,7 +131,7 @@ const styles = StyleSheet.create({
   appBarWrapper: {
     marginHorizontal: 22,
     marginTop: SIZES.small,
-    marginBottom:-20,
+    marginBottom: -20,
   },
   appBar: {
     flexDirection: "row",

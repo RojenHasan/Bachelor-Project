@@ -88,7 +88,7 @@ const FurnitureCategory = ({ navigation }) => {
           />
         </View>
       </View>
-      <Text style={styles.heading}>Categories</Text>
+      <Text style={styles.heading}>Furniture</Text>
       <Carousel
         data={categories}
         renderItem={renderCarouselItem}
