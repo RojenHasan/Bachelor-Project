@@ -4,13 +4,6 @@
         "answer": "We sell a variety of used furniture including sofas, beds, tables, chairs, and more, catering to different styles and needs."
       },
       {
-        "question": "where to find a school te learn Nederlands in Leuven? ",
-        "answer": "You can find more than one school in Leuven depends on what you need. You can learn
-        Nederlands in ILT which is an institution affiliated with the KU leuven universiteit,
-        adres: Dekenstraat 6, bus 5302 3000 Leuven. 
-        or you can learn Nederlands in CVO volt in Heverlee, adres: Interleuvenlaan 3/5, 3001 Leuven"
-      },
-      {
         "question": "How often do you add new items to your inventory?",
         "answer": "New items are added to our inventory regularly, ensuring there's always something fresh to discover."
       },
@@ -103,8 +96,8 @@
           "answer": "You can track your order by logging into your account and navigating to the 'Order History' section. There, you will find the tracking information for your shipment."
         },
         {
-          "question": "What is your return policy?",
-          "answer": "Our return policy allows you to return products within 30 days of purchase for a full refund, provided they are in their original condition and packaging. Please refer to our Returns page for detailed instructions."
+          "question": "Wat is het verschil tussen hogeschool en universiteit?",
+          "answer": "In de hogeschool heb je graduaten & professionele bachelors, aan de universiteit volg je academische bachelors en masters.De meeste opleidingen in een hogeschool zijn professionele bachelors.Die duren meestal drie jaar. Terwijl in een universiteit moet je meestal 3 jaar studeren en dan 2 jaar extra voor een master."
         },
         {
           "question": "Can I cancel my order?",

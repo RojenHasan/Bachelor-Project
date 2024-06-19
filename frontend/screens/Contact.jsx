@@ -35,10 +35,7 @@ const Contact = ({ route }) => {
     const recipientEmail = sellerEmail ? sellerEmail : "jeenhasan112@gmail.com";
 
     try {
-      if (!name || !message || !buyerEmail || !telephone) {
-        Alert.alert("Please fill in all fields");
-        return;
-      }
+     
 
       await MailComposer.composeAsync({
         recipients: [recipientEmail],

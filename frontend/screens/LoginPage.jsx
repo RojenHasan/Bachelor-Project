@@ -50,7 +50,6 @@ const LoginPage = ({ navigation }) => {
     }
   };
 
-
   const login = async () => {
     setLoader(true);
     try {
@@ -98,15 +97,16 @@ const LoginPage = ({ navigation }) => {
   }, [responseData]);
   return (
     <ScrollView>
-      <SafeAreaView style={{ marginHorizontal: 20, marginBottom: 30, marginVertical: 20}}>
-        <View >
+      <SafeAreaView
+        style={{ marginHorizontal: 20, marginBottom: 30, marginVertical: 20 }}
+      >
+        <View>
           <BackButton onPress={() => navigation.goBack()} />
 
           <Image
             source={require("../assets/images/bk.png")}
             style={styles.img}
           />
-
 
           <Text style={styles.motto}>PIVOT </Text>
 
@@ -131,14 +131,14 @@ const LoginPage = ({ navigation }) => {
             }}
             onChangeText={(text) => handleChanges(text, "password")}
           />
-
-          <Button title={"LOGIN"} onPress={validate} />
           <Text
             style={styles.registered}
             onPress={() => navigation.navigate("Signup")}
           >
             Don't have an account? Register
           </Text>
+
+          <Button title={"LOGIN"} onPress={validate} />
         </View>
       </SafeAreaView>
     </ScrollView>

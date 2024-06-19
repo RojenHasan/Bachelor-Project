@@ -166,20 +166,6 @@ const Profile = ({ navigation }) => {
               <View></View>
             ) : (
               <View style={styles.menuWrapper}>
-                <TouchableOpacity
-                  onPress={() => navigation.navigate("Favorites")}
-                >
-                  <View style={styles.menuItem(0.5)}>
-                    <MaterialCommunityIcons
-                      name="heart-outline"
-                      color={COLORS.primary}
-                      size={25}
-                    />
-                    <Text style={styles.menuItemText}>Favorites</Text>
-                  </View>
-                </TouchableOpacity>
-
-
                 <TouchableOpacity onPress={clearCache}>
                   <View style={styles.menuItem(0.5)}>
                     <MaterialCommunityIcons

@@ -19,6 +19,12 @@ cd frontend
 npm install
 npm start
 
+NOTE:
+when I run the frontend , it is running on : Metro waiting on exp://192.168.1.32:8081
+So if you have another address change every address (192.168.1.32) in the code like in here
+--const API_URL = "http://192.168.1.32:3000/api";
+to the address shown in the terminal
+
 Running the Price Prediction Service
 To make the price prediction feature work, navigate to the backend directory and run the Python script:
 cd backend
